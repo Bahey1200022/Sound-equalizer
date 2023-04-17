@@ -1,4 +1,10 @@
-// Get input element for file selection
+//////main arrays
+timeArray=[];
+amplitudeArray=[];
+////equalized
+modifiedtime=[];///???
+modifiedamplitude=[];
+
 const inputElement = document.getElementById('sig');
 
 // Add event listener for file input change
@@ -49,4 +55,34 @@ function decodeAudioData(data) {
     const context = new (window.AudioContext || window.webkitAudioContext)();
     context.decodeAudioData(data, resolve, reject);
   });
+}
+
+
+btn440.onclick = async ()=>{
+let change440=document.getElementById("slider440").value;
+freq=440;
+function equalize(callback){
+  let array = [timeArray, amplitudeArray,change440,freq];
+  $.ajax({
+    type: "POST",
+    url: "/calculate-equalized_sig",
+    async: false,
+    contentType: "application/json; charset=utf-8",
+    data: JSON.stringify(array),
+    dataType: "json",
+    success: function(data) {
+      fmaxviafft = data.fftMaxMagnitude;
+      if(fmaxviafft==0){fmaxviafft=18}
+      console.log(fmaxviafft);
+      
+      if (typeof callback === "function") {
+        callback();
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log(textStatus, errorThrown);
+    }
+  });
+}
+equalize();
 }
