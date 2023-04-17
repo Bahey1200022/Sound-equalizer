@@ -71,9 +71,8 @@ function equalize(callback){
     data: JSON.stringify(array),
     dataType: "json",
     success: function(data) {
-      fmaxviafft = data.fftMaxMagnitude;
-      if(fmaxviafft==0){fmaxviafft=18}
-      console.log(fmaxviafft);
+      modifiedamplitude = data.equalized_sig;
+      console.log(modifiedamplitude);
       
       if (typeof callback === "function") {
         callback();
