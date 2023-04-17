@@ -28,13 +28,12 @@ inputElement.addEventListener('change', (event) => {
         // Create time and amplitude arrays
         const duration = buffer.duration;
         const numSamples = Math.floor(duration * sampleRate);
-        const timeArray = new Float32Array(numSamples);
-        const amplitudeArray = new Float32Array(numSamples);
+      
 
         // Populate time and amplitude arrays
         for (let i = 0; i < numSamples; i++) {
-          timeArray[i] = i / sampleRate;
-          amplitudeArray[i] = channelData[i];
+          timeArray.push(parseFloat(i / sampleRate));
+          amplitudeArray.push( parseFloat(channelData[i]));
         }
 
         // Use timeArray and amplitudeArray for further processing

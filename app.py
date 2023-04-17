@@ -15,8 +15,8 @@ def calculate_equalized():
     array= request.get_json()
     mag_change=array[2]
     freqadjusted=array[3]
-    amp=array[1]
-    timesig=array[0]
+    amp=np.copy(array[1])
+    timesig=np.copy(array[0])
     sigtime=array[0][len(array[0])-2]
 
     # Perform FFT
@@ -27,18 +27,21 @@ def calculate_equalized():
     
     mag = np.abs(fft_amp[f_index])
     
-    new_mag = mag * mag_change
+    new_mag = fft_amp[f_index] * float(mag_change)
 
     # Apply new magnitude to FFT
     fft_amp[f_index] = new_mag
     
     modified_sig = np.fft.ifft(fft_amp) # Inverse FFT of modified FFT
-
-
+    print("a7a")
+    print(modified_sig[1])
+    print(amp[1])
+    modified_sig=np.real(modified_sig).tolist()
+    modified_signal=modified_sig.tolist()
 
      
      
-    return jsonify({'equalized_sig': modified_sig})
+    return jsonify({'equalized_sig': modified_signal})
 
 
 
