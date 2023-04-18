@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -15,8 +16,9 @@
     <label for="sig" class="file-upload-button">Browse Signal</label>
             <input type="file"
                    id="sig" name="signal"
-                   accept=".wav, .csv"><br>
-
+                   accept=".wav, .csv" onchange="previewAudio(this)"><br>
+                   <audio id="audioPlayer" controls>
+                  </audio><br>
                    <label for="slider440" id="label1">440:</label>
                    <input type="range" min="0"  max="10" value="1" class="slider" id="slider440">
                    <button type="button" name="button" id="btn440" >play with 440</button><br>
@@ -48,8 +50,8 @@
                    <label for="slider15000" id="label10">15000:</label>
 
                    <input type="range" min="0"  max="10" value="1" class="slider" id="slider15000"><br>
+                   <button onclick="generateAudio()">Generate Audio</button>
 
 
     <script src="../static/js/logic.js"></script>
-</body>
 </html>

@@ -83,4 +83,52 @@ function equalize(callback){
   });
 }
 equalize();
+// convert_to_audio(timeArray,modifiedamplitude);
+
+}
+
+function previewAudio(input) { ////playing the audio 
+  var audio = document.getElementById('audioPlayer');
+  var file = input.files[0];
+  var reader = new FileReader();
+  reader.onload = function() {
+      audio.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+// function convert_to_audio(modifiedt,modifiedamp){
+//   var audioContext = new AudioContext();
+//   var length = modifiedt.length;
+//   var sampleRate = audioContext.sampleRate;
+//   var buffer = audioContext.createBuffer(1, length, sampleRate);
+//   var bufferData = buffer.getChannelData(0);
+
+//   for (var i = 0; i < length; i++) {
+//     bufferData[i] = modifiedamp[i];
+// }
+
+// var wavData = WavEncoder.encode(buffer);
+// var wavBlob = new Blob([wavData], { type: 'audio/wav' });
+// var wavUrl = URL.createObjectURL(wavBlob);
+// var audio = document.getElementById('audioPlayer2');
+// audio.src = wavUrl;
+// audio.play();
+
+// }
+function generateAudio() {
+  $.ajax({
+    url: '/generate_audio',
+    type: 'GET',
+    responseType: 'arraybuffer',
+    success: function(response) {
+      var audioContext = new AudioContext();
+      audioContext.decodeAudioData(response, function(buffer) {
+        var source = audioContext.createBufferSource();
+        source.buffer = buffer;
+        source.connect(audioContext.destination);
+        source.start();
+      });
+    }
+  });
 }
