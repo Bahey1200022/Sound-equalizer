@@ -5,6 +5,26 @@ amplitudeArray=[];
 modifiedtime=[];///???
 modifiedamplitude=[];
 
+// Get all the sliders
+var sliders = document.querySelectorAll('.slider');
+
+//Change frequency when slider value changes
+// Create an array to store the frequency values
+freq_1=[1,1,1,1,1,1,1,1,1,1];
+
+// Loop through each slider
+sliders.forEach(function(slider, index) {
+  // Add an event listener to listen for changes in the slider value
+  slider.addEventListener('change', function() {
+    // Update the corresponding frequency value in the array
+    freq_1[index] = parseInt(this.value);
+    // Output the updated array to the console
+    console.log(freq_1);
+  });
+});
+
+
+
 const inputElement = document.getElementById('sig');
 
 // Add event listener for file input change
@@ -55,6 +75,8 @@ function decodeAudioData(data) {
     context.decodeAudioData(data, resolve, reject);
   });
 }
+
+
 
 
 btn440.onclick = async ()=>{
