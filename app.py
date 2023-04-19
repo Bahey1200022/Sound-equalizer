@@ -75,7 +75,7 @@ def calculate_equalized():
 @app.route('/generate_audio')
 def generate_audio():
     # Define the time and amplitude arrays
-    print(f'fady {amplitudelist}')
+    #print(f'fady {amplitudelist}')
     amplitudelist_scaled = np.int16(amplitudelist / np.max(np.abs(amplitudelist)) * 32767) #Values are scaled to be audiable (The range is between -32768 to 32767)
     equalizedamp = np.array(amplitudelist_scaled)
 
