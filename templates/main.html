@@ -19,39 +19,39 @@
                    accept=".wav, .csv" onchange="previewAudio(this)"><br>
                    <audio id="audioPlayer" controls>
                   </audio><br>
-                   <label for="slider440" id="label1">440:</label>
-                   <input type="range" min="0"  max="10" value="1" class="slider" id="slider440">
-                   <button type="button" name="button" id="btn440" >play with 440</button><br>
+                   <label for="slider440" id="label1">0-440:</label>
+                   <input type="range" min="0"  max="10" value="1" class="slider" id="slider440"><br>
 
-                     <label for="slider880" id="label2">880:</label>
+                     <label for="slider880" id="label2">440-880:</label>
 
                    <input type="range" min="0"  max="10" value="1" class="slider" id="slider880"><br>
-                   <label for="slider1760" id="label3">1760:</label>
+                   <label for="slider1760" id="label3">880-1320:</label>
 
                    <input type="range" min="0"  max="10" value="1" class="slider" id="slider1760"><br>
-                   <label for="slider1000" id="label4">1000:</label>
+                   <label for="slider1000" id="label4">1320-1760:</label>
 
                    <input type="range" min="0"  max="10" value="1" class="slider" id="slider1000"><br>
-                   <label for="slider2500" id="label5">2500:</label>
+                   <label for="slider2500" id="label5">1760-2200:</label>
 
                    <input type="range" min="0"  max="10" value="1" class="slider" id="slider2500"><br>
-                   <label for="slider5000" id="label6">5000:</label>
+                   <label for="slider5000" id="label6">2200-2640:</label>
 
                    <input type="range" min="0"  max="10" value="1" class="slider" id="slider5000"><br>
-                   <label for="slider6000" id="label7">6000:</label>
+                   <label for="slider6000" id="label7">2640-3080:</label>
 
                    <input type="range" min="0"  max="10" value="1" class="slider" id="slider6000"><br>
-                   <label for="slider600" id="label8">600:</label>
+                   <label for="slider600" id="label8">3080-3520:</label>
 
                    <input type="range" min="0"  max="10" value="1" class="slider" id="slider600"><br>
-                   <label for="slider10000" id="label9">10000:</label>
+                   <label for="slider10000" id="label9">3520-3960:</label>
 
                    <input type="range" min="0"  max="10" value="1" class="slider" id="slider10000"><br>
-                   <label for="slider15000" id="label10">15000:</label>
+                   <label for="slider15000" id="label10">3960-4400</label>
 
                    <input type="range" min="0"  max="10" value="1" class="slider" id="slider15000"><br>
-                   <button onclick="generateAudio()">Generate Audio</button>
-
+                   <button id="change">Generate Audio</button><br>
+                   <audio id="audioPlayer2" controls>
+                  </audio><br>
 
     <script src="../static/js/logic.js"></script>
 </html>
