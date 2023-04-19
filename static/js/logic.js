@@ -106,6 +106,37 @@ function decodeAudioData(data) {
   });
 }
 
+
+
+//function that returns frequency and magnitude for spectogram plot
+function get_freq(callback){
+let array = [amplitudeArray]
+  $.ajax({
+    type: "POST",
+    url: "/generate_frequency",
+    async: false,
+    contentType: "application/json; charset=utf-8",
+    data: JSON.stringify(array),
+    dataType: "json",
+    success: function(data) {
+      freq_mag = data.fft_mag;
+      console.log(freq_mag[0]);
+      
+      if (typeof callback === "function") {
+        callback(freq_mag[0], freq_mag[1]);
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log(textStatus, errorThrown);
+    }
+  });
+}
+
+
+
+
+
+
 const Change = document.getElementById('change');
 
 

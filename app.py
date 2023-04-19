@@ -90,5 +90,17 @@ def generate_audio():
     # Return the WAV file as a binary response
     return send_file(wav_filename, mimetype='audio/wav', as_attachment=True)
 
+
+@app.route('/generate_frequency', methods=['POST'])
+def generate_frequency():
+     freq_array = request.get_json()
+     fft_amp = np.fft.fft(freq_array[0])
+     mag = np.abs(fft_amp)
+     freq_amp_modified = [fft_amp,mag]
+
+     return jsonify({'fft_mag' : freq_amp_modified})
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
