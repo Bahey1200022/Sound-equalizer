@@ -26,6 +26,35 @@ sliders.forEach(function(slider, index) {
 
 
 
+//Function to plot spectogram
+function plotSpectrogram(name, freq, time, amplitude, id) {
+  // Define the trace for the spectrogram
+  var spectrogramTrace = {
+    x: time,
+    y: freq,
+    z: amplitude,
+    type: 'heatmap',
+    colorscale: 'Viridis',
+  };
+
+  // Define the layout for the plot
+  var layout = {
+    title: name,
+    xaxis: {
+      title: 'Time (seconds)',
+    },
+    yaxis: {
+      title: 'Frequency (Hz)',
+      autorange: 'reversed',
+    },
+  };
+
+  // Create the plot
+  Plotly.newPlot(id, [spectrogramTrace], layout);
+}
+
+
+
 const inputElement = document.getElementById('sig');
 
 // Add event listener for file input change
