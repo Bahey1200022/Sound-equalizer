@@ -11,6 +11,10 @@ def equalizer():
 
 timelist=[]
 
+def equalize_freq(freq_list):
+    for i in freq_list:
+        
+
 @app.route('/calculate-equalized_sig', methods=['POST'])
 def calculate_equalized():
     array= request.get_json()

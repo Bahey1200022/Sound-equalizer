@@ -11,6 +11,7 @@ var sliders = document.querySelectorAll('.slider');
 //Change frequency when slider value changes
 // Create an array to store the frequency values
 freq_1=[1,1,1,1,1,1,1,1,1,1];
+freq_ranges[440,880,1320,1760,2200,2640,3080,3520,3960,4400]
 
 // Loop through each slider
 sliders.forEach(function(slider, index) {
@@ -83,7 +84,7 @@ btn440.onclick = async ()=>{
 let change440=document.getElementById("slider440").value;
 freq=440;
 function equalize(callback){
-  let array = [timeArray, amplitudeArray,change440,freq];
+  let array = [timeArray, amplitudeArray,freq_1,freq_ranges];
   $.ajax({
     type: "POST",
     url: "/calculate-equalized_sig",
