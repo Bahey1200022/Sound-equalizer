@@ -9,8 +9,8 @@ app = Flask(__name__)
 def equalizer():
     return render_template('main.html')
 
-amplitudelist=[]
 timelist=[]
+
 @app.route('/calculate-equalized_sig', methods=['POST'])
 def calculate_equalized():
     array= request.get_json()
@@ -38,7 +38,8 @@ def calculate_equalized():
     
     modified_sig=np.real(modified_sig)
     modified_signal=modified_sig.tolist()
-    amplitudelist=modified_signal.copy()
+    global amplitudelist
+    amplitudelist = modified_signal.copy()
      
      
     return jsonify({'equalized_sig': modified_signal})
@@ -47,8 +48,9 @@ def calculate_equalized():
 @app.route('/generate_audio')
 def generate_audio():
     # Define the time and amplitude arrays
-    
-    equalizedamp = np.array(amplitudelist).astype(np.int16)
+    print(f'fady {amplitudelist}')
+    amplitudelist_scaled = np.int16(amplitudelist / np.max(np.abs(amplitudelist)) * 32767) #Values are scaled to be audiable (The range is between -32768 to 32767)
+    equalizedamp = np.array(amplitudelist_scaled)
 
     # Save the arrays as a WAV file
     wav_filename = 'audio_file.wav'
