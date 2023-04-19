@@ -184,4 +184,5 @@ function generateAudio() {
       });
     }
   });
+  document.getElementById('audioPlayer2').src = "../audio_file.wav";
 }
