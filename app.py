@@ -15,9 +15,9 @@ def equalize_freq(amplist,time,f,equalizedmag):
         fft_amp = np.fft.fft(amplist) # FFT of signal
         freqs = np.fft.fftfreq(len(amplist), d=time/len(amplist)) # Frequency array
         freq_mask = (freqs >= f-440) & (freqs <= f)
-        freqs_picked = freqs[freq_mask]
-        new_mag = fft_amp[freqs_picked] * float(equalizedmag)
-        fft_amp[freqs_picked] = new_mag
+        #freqs_picked = freqs[freq_mask]
+        new_mag = fft_amp[freq_mask] * float(equalizedmag)
+        fft_amp[freq_mask] = new_mag
         modified_sig = np.fft.ifft(fft_amp) # Inverse FFT of modified FFT
         modified_sig=np.real(modified_sig)
         # modified_signal=modified_sig.tolist()

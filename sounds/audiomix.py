@@ -6,7 +6,7 @@ sampling_rate = 44100  # Hz
 duration = 5  # seconds
 
 # Specify the frequencies and amplitudes of the sinusoidal waves
-frequencies = [440, 880, 1760,1000,2500,5000,6000,600,10000,15000]  # Hz
+frequencies = [440, 880, 1760,1000,2500,4400,1400,600,100,150]  # Hz
 amplitudes = [0.5, 0.3, 0.2,0.6,0.8,0.7,0.1,0.3,0.4,0.2]
 
 # Generate the audio data

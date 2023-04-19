@@ -11,7 +11,7 @@ var sliders = document.querySelectorAll('.slider');
 //Change frequency when slider value changes
 // Create an array to store the frequency values
 freq_1=[1,1,1,1,1,1,1,1,1,1];
-freq_ranges[440,880,1320,1760,2200,2640,3080,3520,3960,4400]
+freq_ranges=[440,880,1320,1760,2200,2640,3080,3520,3960,4400]
 
 // Loop through each slider
 sliders.forEach(function(slider, index) {
@@ -20,7 +20,7 @@ sliders.forEach(function(slider, index) {
     // Update the corresponding frequency value in the array
     freq_1[index] = parseInt(this.value);
     // Output the updated array to the console
-    console.log(freq_1);
+    // console.log(freq_1);
   });
 });
 
@@ -106,12 +106,12 @@ function decodeAudioData(data) {
   });
 }
 
+const Change = document.getElementById('change');
 
 
 
-btn440.onclick = async ()=>{
-let change440=document.getElementById("slider440").value;
-freq=440;
+Change.onclick = async ()=>{
+
 function equalize(callback){
   let array = [timeArray, amplitudeArray,freq_1,freq_ranges];
   $.ajax({
@@ -135,6 +135,7 @@ function equalize(callback){
   });
 }
 equalize();
+generateAudio();
 // convert_to_audio(timeArray,modifiedamplitude);
 
 }
