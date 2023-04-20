@@ -90,6 +90,24 @@ inputElement.addEventListener('change', (event) => {
         // console.log('Time array:', timeArray);
         // console.log('Amplitude array:', amplitudeArray);
         spectogramtrial();
+
+        console.log(amplitudeArray)
+
+        get_freq(amplitudeArray)
+        .then(data => {
+          let freq = data.freq;
+          let amp = data.amp;
+          console.log("Frequency: ", freq);
+          console.log("Magnitude: ", amp);
+
+          plotSpectrogram('Specto', freq, timeArray, amp, plot1)
+
+
+
+        })
+        .catch(error => {
+          console.error(error);
+        });
       })
       .catch(error => {
         console.error('Error decoding audio data:', error);
@@ -98,6 +116,9 @@ inputElement.addEventListener('change', (event) => {
 
   // Read file as array buffer
   reader.readAsArrayBuffer(file);
+
+  
+  
 });
 
 function decodeAudioData(data) {
@@ -110,27 +131,25 @@ function decodeAudioData(data) {
 
 
 //function that returns frequency and magnitude for spectogram plot
-function get_freq(callback){
-let array = [amplitudeArray]
-  $.ajax({
-    type: "POST",
-    url: "/generate_frequency",
-    async: false,
-    contentType: "application/json; charset=utf-8",
-    data: JSON.stringify(array),
-    dataType: "json",
-    success: function(data) {
-      freq_mag = data.fft_mag;
-      spectogramfft=freq_mag
-      // console.log(spectogramfft);
-      
-      if (typeof callback === "function") {
-        callback();
+function get_freq(amp_array) {
+  return new Promise((resolve, reject) => {
+    let array = [amp_array]
+    $.ajax({
+      type: "POST",
+      url: "/generate_frequency",
+      async: false,
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify(array),
+      dataType: "json",
+      success: function(data) {
+        let freq = data.freq;
+        let amp = data.mag;
+        resolve({freq, amp});
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        reject(errorThrown);
       }
-    },
-    error: function(jqXHR, textStatus, errorThrown) {
-      console.log(textStatus, errorThrown);
-    }
+    });
   });
 }
 

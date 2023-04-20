@@ -93,14 +93,17 @@ def generate_audio():
 
 @app.route('/generate_frequency', methods=['POST'])
 def generate_frequency():
-     freq_array = request.get_json()
-     fft_amp = np.fft.fft(freq_array[0])
-     mag = np.abs(fft_amp)
-     mag=mag.tolist()
-    #  freq_amp_modified = [fft_amp,mag]
+    freq_array = request.get_json()
+    if len(freq_array[0]) % 2 != 0:
+        return jsonify({'error': 'Invalid input array length'})
 
-     return jsonify({'fft_mag' : mag})
+    fft_amp = np.fft.fft(freq_array[0])
+    mag = np.abs(fft_amp)
+    mag = mag.tolist()
+    freq = np.fft.fftfreq(len(mag))
+    freq = freq.tolist()
 
+    return jsonify({'freq': freq, 'mag': mag})
 
 
 if __name__ == '__main__':
