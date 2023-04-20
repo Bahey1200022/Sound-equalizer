@@ -7,7 +7,7 @@ duration = 5  # seconds
 
 # Specify the frequencies and amplitudes of the sinusoidal waves
 frequencies = [440, 880, 1760,1000,2500,4400,1400,600,100,150]  # Hz
-amplitudes = [0.9, 0.8, 0.7,0.6,0.01,0.02,0.8,0.3,0.4,0.2]
+amplitudes = [0.5, 0.5, 0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5]
 
 # Generate the audio data
 t = np.linspace(0, duration, int(sampling_rate * duration), endpoint=False)
