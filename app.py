@@ -1,5 +1,6 @@
 from flask import Flask, render_template,request, jsonify, send_file
 import numpy as np
+import os
 from scipy.fft import fft, rfft
 from scipy.fft import fftfreq, rfftfreq
 import wave
@@ -37,7 +38,6 @@ def calculate_equalized():
     freqadjusted=np.copy(array[3])
     amp=np.copy(array[1])
     sigtime=array[0][len(array[0])-2]
-
     #timelist=array[0].copy()
     # timesig=np.copy(array[0])
     # Perform FFT
@@ -74,8 +74,12 @@ def calculate_equalized():
 
 @app.route('/generate_audio')
 def generate_audio():
-    # Define the time and amplitude arrays
-    #print(f'fady {amplitudelist}')
+    
+    file_path = "audio_file.wav"
+    if os.path.exists(file_path):
+        os.remove(file_path)
+
+    
     amplitudelist_scaled = np.int16(amplitudelist / np.max(np.abs(amplitudelist)) * 32767) #Values are scaled to be audiable (The range is between -32768 to 32767)
     equalizedamp = np.array(amplitudelist_scaled)
 
