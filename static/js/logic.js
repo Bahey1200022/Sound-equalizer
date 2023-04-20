@@ -167,7 +167,10 @@ function equalize(callback){
 }
 equalize();
 generateAudio();
-// convert_to_audio(timeArray,modifiedamplitude);
+// document.getElementById('audioPlayer2').src = "../audio_file.wav";
+var audioElement = document.getElementById("audioPlayer2");
+audioElement.setAttribute("src", "/generate_audio");
+// // convert_to_audio(timeArray,modifiedamplitude);
 
 }
 
@@ -205,15 +208,15 @@ function generateAudio() {
     url: '/generate_audio',
     type: 'GET',
     responseType: 'arraybuffer',
-    success: function(response) {
-      var audioContext = new AudioContext();
-      audioContext.decodeAudioData(response, function(buffer) {
-        var source = audioContext.createBufferSource();
-        source.buffer = buffer;
-        source.connect(audioContext.destination);
-        source.start();
-      });
-    }
+    // success: function(response) {
+    //   var audioContext = new AudioContext();
+    //   audioContext.decodeAudioData(response, function(buffer) {
+    //     var source = audioContext.createBufferSource();
+    //     source.buffer = buffer;
+    //     source.connect(audioContext.destination);
+    //     source.start();
+    //   });
+    // }
   });
-  document.getElementById('audioPlayer2').src = "../audio_file.wav";
+  // document.getElementById('audioPlayer2').src = "../audio_file.wav";
 }
