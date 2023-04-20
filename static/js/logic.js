@@ -89,7 +89,7 @@ inputElement.addEventListener('change', (event) => {
         // Use timeArray and amplitudeArray for further processing
         // console.log('Time array:', timeArray);
         // console.log('Amplitude array:', amplitudeArray);
-        spectogramtrial();
+        // spectogramtrial();
       })
       .catch(error => {
         console.error('Error decoding audio data:', error);
