@@ -89,22 +89,22 @@ inputElement.addEventListener('change', (event) => {
         // Use timeArray and amplitudeArray for further processing
         // console.log('Time array:', timeArray);
         // console.log('Amplitude array:', amplitudeArray);
-        spectogramtrial();
+        // spectogramtrial();
 
         console.log(amplitudeArray)
 
-        get_freq(amplitudeArray)
-        .then(data => {
-          let freq = data.freq;
-          let amp = data.amp;
-          console.log("Frequency: ", freq);
-          console.log("Magnitude: ", amp);
+        // get_freq(amplitudeArray)
+        // .then(data => {
+        //   let freq = data.freq;
+        //   let amp = data.amp;
+        //   console.log("Frequency: ", freq);
+        //   console.log("Magnitude: ", amp);
 
-          plotSpectrogram('Specto', freq, timeArray, amp, plot1)
+        //   plotSpectrogram('Specto', freq, timeArray, amp, plot1)
 
 
 
-        })
+        // })
         .catch(error => {
           console.error(error);
         });
@@ -188,8 +188,8 @@ function equalize(callback){
 }
 equalize();
 generateAudio();
-var audioElement = document.getElementById("audioPlayer2");
-audioElement.setAttribute("src", "/generate_audio");
+// var audioElement = document.getElementById("audioPlayer2");
+// audioElement.setAttribute("src", "/generate_audio");
 
 }
 
@@ -205,20 +205,22 @@ function previewAudio(input) { ////playing the audio
 
 
 function generateAudio() {
-  $.ajax({
-    url: '/generate_audio',
-    type: 'GET',
-    responseType: 'arraybuffer',
-    // success: function(response) {
-    //   var audioContext = new AudioContext();
-    //   audioContext.decodeAudioData(response, function(buffer) {
-    //     var source = audioContext.createBufferSource();
-    //     source.buffer = buffer;
-    //     source.connect(audioContext.destination);
-    //     source.start();
-    //   });
-    // }
-  });
+  // $.ajax({
+  //   url: '/generate_audio',
+  //   type: 'GET',
+  //   responseType: 'arraybuffer',
+  //   // success: function(response) {
+  //   //   var audioContext = new AudioContext();
+  //   //   audioContext.decodeAudioData(response, function(buffer) {
+  //   //     var source = audioContext.createBufferSource();
+  //   //     source.buffer = buffer;
+  //   //     source.connect(audioContext.destination);
+  //   //     source.start();
+  //   //   });
+  //   // }
+  // });
+  var audioElement = document.getElementById("audioPlayer2");
+audioElement.setAttribute("src", "/generate_audio");
 }
 
 // function spectogramtrial(){
@@ -278,8 +280,3 @@ function generateAudio() {
 // }
 
 // }
-function spectogramtrial(){
-
-
-  
-}
