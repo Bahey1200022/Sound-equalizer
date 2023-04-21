@@ -5,6 +5,21 @@ amplitudeArray=[];
 modifiedtime=[];///???
 modifiedamplitude=[];
 spectogramfft=[];
+const layout = { title: 'Original Signal', yaxis: { title: 'Amplitude', fixedrange: true }, xaxis: { title: 'Time', fixedrange: true, rangemode: 'tozero'}, width : 700 }; // fixedrange -> No pan when there is no signal
+const plotDiv = document.getElementById('graph1');
+const config = {
+    displayModeBar: false, //disable plotlytool bar when there is no signal
+}
+Plotly.newPlot(plotDiv, [], layout, config);
+
+
+
+const layout2 = { title: 'equalized Signal', yaxis: { title: 'Amplitude', fixedrange: true }, xaxis: { title: 'Time', fixedrange: true, rangemode: 'tozero'}, width : 700 }; // fixedrange -> No pan when there is no signal
+const plotDiv2 = document.getElementById('graph2');
+const config2 = {
+    displayModeBar: false, //disable plotlytool bar when there is no signal
+}
+Plotly.newPlot(plotDiv2, [], layout2, config2);
 // Get all the sliders
 var sliders = document.querySelectorAll('.slider');
 
@@ -89,7 +104,16 @@ inputElement.addEventListener('change', (event) => {
         // Use timeArray and amplitudeArray for further processing
         // console.log('Time array:', timeArray);
         console.log('Amplitude array:', amplitudeArray);
-        
+        const trace={
+          x: timeArray,
+          y: amplitudeArray,name:"original",
+          type: 'scatter',
+          mode: 'lines',
+          line: {
+              color: 'blue'
+          },
+        };
+        Plotly.newPlot(plotDiv, [trace], layout, config);
         // console.log(amplitudeArray)
 
         //  get_freq(amplitudeArray)
@@ -186,6 +210,16 @@ function equalize(callback){
   });
 }
 equalize();
+const trace2={
+  x: timeArray,
+  y: modifiedamplitude,name:"original",
+  type: 'scatter',
+  mode: 'lines',
+  line: {
+      color: 'blue'
+  },
+};
+Plotly.newPlot(plotDiv2, [trace2], layout, config);
 generateAudio();
 
 
