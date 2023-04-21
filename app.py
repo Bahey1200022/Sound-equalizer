@@ -17,7 +17,7 @@ timelist=[]
 def equalize_freq(amplist,time,f,equalizedmag):
         fft_amp = np.fft.fft(amplist) # FFT of signal
         freqs = np.fft.fftfreq(len(amplist), d=time/len(amplist)) # Frequency array
-        freq_mask = (freqs >= f-440) & (freqs <= f)
+        freq_mask = (freqs >= f-44) & (freqs <= f)
         #freqs_picked = freqs[freq_mask]
         new_mag = fft_amp[freq_mask] * float(equalizedmag)
         fft_amp[freq_mask] = new_mag
@@ -79,6 +79,7 @@ def generate_audio():
     
     file_path = "audio_file.wav"
     if os.path.exists(file_path):
+        print("زبيٍ")
         os.remove(file_path)
    
     

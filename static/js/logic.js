@@ -26,7 +26,7 @@ var sliders = document.querySelectorAll('.slider');
 //Change frequency when slider value changes
 // Create an array to store the frequency values
 freq_1=[1,1,1,1,1,1,1,1,1,1];
-freq_ranges=[440,880,1320,1760,2200,2640,3080,3520,3960,4400]
+freq_ranges=[85,102,146,190,234,278,322,366,410,454]
 
 // Loop through each slider
 sliders.forEach(function(slider, index) {
@@ -238,6 +238,8 @@ function previewAudio(input) { ////playing the audio
 
 function generateAudio() {
   var audioElement = document.getElementById("audioPlayer2");
+  audioElement.src = '';
+
 audioElement.setAttribute("src", "/generate_audio");
 }
 
