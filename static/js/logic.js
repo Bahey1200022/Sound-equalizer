@@ -89,7 +89,7 @@ inputElement.addEventListener('change', (event) => {
         // Use timeArray and amplitudeArray for further processing
         // console.log('Time array:', timeArray);
         // console.log('Amplitude array:', amplitudeArray);
-        // spectogramtrial();
+        
 
         console.log(amplitudeArray)
 
@@ -188,8 +188,7 @@ function equalize(callback){
 }
 equalize();
 generateAudio();
-// var audioElement = document.getElementById("audioPlayer2");
-// audioElement.setAttribute("src", "/generate_audio");
+
 
 }
 
@@ -223,60 +222,4 @@ function generateAudio() {
 audioElement.setAttribute("src", "/generate_audio");
 }
 
-// function spectogramtrial(){
-//   // sample rate of the audio signal
-// const sampleRate = 44100;
 
-// // size of the FFT window
-// const fftSize = 1024;
-
-// // number of segments in the spectrogram
-// const numSegments = 20;
-
-// // duration of each segment in seconds
-// const segmentDuration = 0.1;
-
-// // create a canvas element
-// const canvas = document.createElement('canvas');
-// canvas.width = numSegments;
-// canvas.height = fftSize / 2;
-// document.body.appendChild(canvas);
-
-// // get the 2D context of the canvas
-// const ctx = canvas.getContext('2d');
-
-// // calculate the hop size between segments
-// const hopSize = Math.floor((segmentDuration * sampleRate) / fftSize);
-
-// // iterate over each segment
-// for (let i = 0; i < numSegments; i++) {
-//   // calculate the starting sample index of the segment
-//   const startIndex = i * hopSize;
-  
-//   // calculate the ending sample index of the segment
-//   const endIndex = startIndex + fftSize;
-  
-//   // slice the amplitude array to obtain the segment
-//   const segment = amplitudeArray.slice(startIndex, endIndex);
-  
-//   // apply the FFT to the segment to obtain the frequency domain signal
-//   get_freq();
-//   // const fft = new FFT(fftSize);
-//   // fft.forward(segment);
-//   const frequencyData = spectogramfft;
-  
-//   // calculate the power spectral density (PSD) of the segment
-//   const psd = frequencyData.map(f => Math.pow(Math.abs(f), 2));
-  
-//   // plot the spectrogram of the segment
-//   for (let j = 0; j < fftSize / 2; j++) {
-//     // calculate the color of the rectangle based on the PSD value
-//     const color = `rgb(${Math.floor(psd[j] * 255)}, 0, 0)`;
-    
-//     // draw the rectangle on the canvas
-//     ctx.fillStyle = color;
-//     ctx.fillRect(i, fftSize / 2 - j, 1, 1);
-//   }
-// }
-
-// }
