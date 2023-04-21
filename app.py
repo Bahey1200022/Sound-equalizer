@@ -77,9 +77,9 @@ def calculate_equalized():
 @app.route('/generate_audio')
 def generate_audio():
     
-    # file_path = "audio_file.wav"
-    # if os.path.exists(file_path):
-    #     os.remove(file_path)
+    file_path = "audio_file.wav"
+    if os.path.exists(file_path):
+        os.remove(file_path)
    
     
     amplitudelist_scaled = np.int16(amplitudelist / np.max(np.abs(amplitudelist)) * 32767) #Values are scaled to be audiable (The range is between -32768 to 32767)
