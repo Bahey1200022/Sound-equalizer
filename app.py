@@ -1,10 +1,12 @@
-from flask import Flask, render_template,request, jsonify, send_file
+from flask import Flask, render_template,request, jsonify, send_file,session
 import numpy as np
 import os
 from scipy.fft import fft, rfft
 from scipy.fft import fftfreq, rfftfreq
 import wave
 app = Flask(__name__)
+app.secret_key = 'your_secret_key'
+
 
 @app.route('/')
 def equalizer():
@@ -75,16 +77,17 @@ def calculate_equalized():
 @app.route('/generate_audio')
 def generate_audio():
     
-    file_path = "audio_file.wav"
-    if os.path.exists(file_path):
-        os.remove(file_path)
-
+    # file_path = "audio_file.wav"
+    # if os.path.exists(file_path):
+    #     os.remove(file_path)
+   
     
     amplitudelist_scaled = np.int16(amplitudelist / np.max(np.abs(amplitudelist)) * 32767) #Values are scaled to be audiable (The range is between -32768 to 32767)
     equalizedamp = np.array(amplitudelist_scaled)
 
     # Save the arrays as a WAV file
     wav_filename = 'audio_file.wav'
+    # wav_filename=wav_filename.format(session['counter'])
     with wave.open(wav_filename, 'wb') as wav_file:
         wav_file.setnchannels(1)
         wav_file.setsampwidth(2)
