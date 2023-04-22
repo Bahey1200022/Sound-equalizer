@@ -103,7 +103,15 @@ inputElement.addEventListener('change', (event) => {
 
         // Use timeArray and amplitudeArray for further processing
         // console.log('Time array:', timeArray);
-        console.log('Amplitude array:', amplitudeArray);
+        // console.log('Amplitude array:', amplitudeArray);
+        // const spic = document.getElementById('spectogram');
+      
+        const img = document.getElementById('img');
+        img.setAttribute('src', '');
+
+        sendsig();
+        img.src = '/spectogram';
+        // spic.appendChild(img);
         const trace={
           x: timeArray,
           y: amplitudeArray,name:"original",
@@ -114,23 +122,8 @@ inputElement.addEventListener('change', (event) => {
           },
         };
         Plotly.newPlot(plotDiv, [trace], layout, config);
-        // console.log(amplitudeArray)
 
-        //  get_freq(amplitudeArray)
-        // .then(data => {
-        //   let freq = data.freq;
-        //   let amp = data.amp;
-        //   console.log("Frequency: ", freq);
-        //   console.log("Magnitude: ", amp);
-
-        // //   plotSpectrogram('Specto', freq, timeArray, amp, plot1)
-
-
-
-        // })
-        // .catch(error => {
-        //   console.error(error);
-        // });
+        
       })
       .catch(error => {
         console.error('Error decoding audio data:', error);
@@ -245,56 +238,26 @@ audioElement.setAttribute("src", "/generate_audio");
 
 
 
-const sp = document.getElementById('specto');
 
 
-sp.onclick = async ()=>{
-
-  
-    // get the input file element from the HTML document
-    const fileInput = document.querySelector('input[type="file"]');
-    
-    // create an instance of the AudioContext class
-    const audioContext = new AudioContext();
-    
-    // load the WAV file using the XMLHttpRequest API
-    const fileReader = new FileReader();
-    fileReader.onload = function() {
-      const arrayBuffer = this.result;
-      audioContext.decodeAudioData(arrayBuffer, function(decodedData) {
-        // create an AnalyserNode to analyze the frequency content of the audio data
-        const analyser = audioContext.createAnalyser();
-        analyser.fftSize = 2048;
-        const bufferLength = analyser.frequencyBinCount;
-        const dataArray = new Uint8Array(bufferLength);
-        analyser.getByteTimeDomainData(dataArray);
-    
-        // create a canvas element to display the spectrogram
-        const canvas = document.createElement('canvas');
-        const canvasContext = canvas.getContext('2d');
-        canvas.width = 800;
-        canvas.height = 300;
-        document.body.appendChild(canvas);
-    
-        // draw the spectrogram on the canvas element
-        function renderFrame() {
-          requestAnimationFrame(renderFrame);
-          analyser.getByteFrequencyData(dataArray);
-          canvasContext.fillStyle = 'rgb(0, 0, 0)';
-          canvasContext.fillRect(0, 0, canvas.width, canvas.height);
-          const barWidth = canvas.width / bufferLength;
-          let barHeight;
-          let x = 0;
-          for (let i = 0; i < bufferLength; i++) {
-            barHeight = dataArray[i];
-            canvasContext.fillStyle = 'rgb(' + (barHeight + 100) + ',50,50)';
-            canvasContext.fillRect(x, canvas.height - barHeight / 2, barWidth, barHeight / 2);
-            x += barWidth + 1;
-          }
+  function sendsig(callback){
+    let array = [timeArray, amplitudeArray];
+    $.ajax({
+      type: "POST",
+      url: "/send_signal",
+      async: false,
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify(array),
+      dataType: "json",
+      success: function(data) {
+        console.log('signal array:',data.sig);
+        
+        if (typeof callback === "function") {
+          callback();
         }
-        renderFrame();
-      });
-    }
-    fileInput.addEventListener('change', function() {
-      fileReader.readAsArrayBuffer(this.files[0]);
-    });}
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        console.log(textStatus, errorThrown);
+      }
+    });
+  }

@@ -1,6 +1,8 @@
 from flask import Flask, render_template,request, jsonify, send_file,session
 import numpy as np
 import os
+import scipy.signal as signal
+import matplotlib.pyplot as plt
 from scipy.fft import fft, rfft
 from scipy.fft import fftfreq, rfftfreq
 import wave
@@ -12,7 +14,6 @@ app.secret_key = 'your_secret_key'
 def equalizer():
     return render_template('main.html')
 
-timelist=[]
 
 def equalize_freq(amplist,time,f,equalizedmag):
         fft_amp = np.fft.fft(amplist) # FFT of signal
@@ -27,7 +28,17 @@ def equalize_freq(amplist,time,f,equalizedmag):
         return modified_sig
 
         
+@app.route('/send_signal', methods=['POST'])
+def get_signal():
+    array= request.get_json()
+    global originatime 
+    originatime=array[0]
+    global originalamp
+    originalamp=array[1]
+    return jsonify({'sig': originalamp})
 
+
+    
 
         
         
@@ -69,7 +80,7 @@ def calculate_equalized():
     
     global amplitudelist
     amplitudelist = modified_signal.copy()
-     
+    
      
     return jsonify({'equalized_sig': modified_signal})
 
@@ -77,9 +88,8 @@ def calculate_equalized():
 @app.route('/generate_audio')
 def generate_audio():
     
-    file_path = "audio_file.wav"
+    file_path = "spectrogram.png"
     if os.path.exists(file_path):
-        print("زبيٍ")
         os.remove(file_path)
    
     
@@ -112,6 +122,31 @@ def generate_frequency():
     freq = freq.tolist()
 
     return jsonify({'freq': freq, 'mag': mag})
+
+
+@app.route('/spectogram')
+def get_image():
+    file_path = "spectrogram.png"
+    if os.path.exists(file_path):
+        os.remove(file_path)
+    oamp=np.copy(originalamp)
+    otime=np.copy(originatime)
+    window = signal.windows.hann(1024)
+    noverlap = 512
+    # Generate a spectrogram using the signal
+    freq, time, Sxx = signal.spectrogram(oamp, fs=1.0/(otime[1]-otime[0]),
+                                        window=window, noverlap=noverlap)
+    plt.pcolormesh(time, freq, 10*np.log10(Sxx), cmap='viridis')
+    plt.xlabel('Time [s]')
+    plt.ylabel('Frequency [Hz]')
+    plt.colorbar()
+
+    # Save the plot as an image
+    plt.savefig('spectrogram.png')
+    filename='spectrogram.png'
+    return send_file(filename, mimetype='image/png')
+
+
 
 
 if __name__ == '__main__':
