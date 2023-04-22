@@ -2,7 +2,6 @@
 timeArray=[];
 amplitudeArray=[];
 ////equalized
-modifiedtime=[];///???
 modifiedamplitude=[];
 spectogramfft=[];
 const layout = { title: 'Original Signal', yaxis: { title: 'Amplitude', fixedrange: true }, xaxis: { title: 'Time', fixedrange: true, rangemode: 'tozero'}, width : 1200 }; // fixedrange -> No pan when there is no signal
@@ -32,42 +31,10 @@ freq_ranges=[85,102,146,190,234,278,322,366,410,454]
 sliders.forEach(function(slider, index) {
   // Add an event listener to listen for changes in the slider value
   slider.addEventListener('change', function() {
-    // Update the corresponding frequency value in the array
     freq_1[index] = parseInt(this.value);
-    // Output the updated array to the console
-    // console.log(freq_1);
+    
   });
 });
-
-
-
-//Function to plot spectogram
-function plotSpectrogram(name, freq, time, amplitude, id) {
-  // Define the trace for the spectrogram
-  var spectrogramTrace = {
-    x: time,
-    y: freq,
-    z: amplitude,
-    type: 'heatmap',
-    colorscale: 'Viridis',
-  };
-
-  // Define the layout for the plot
-  var layout = {
-    title: name,
-    xaxis: {
-      title: 'Time (seconds)',
-    },
-    yaxis: {
-      title: 'Frequency (Hz)',
-      autorange: 'reversed',
-    },
-  };
-
-  // Create the plot
-  Plotly.newPlot(id, [spectrogramTrace], layout);
-}
-
 
 
 const inputElement = document.getElementById('sig');
@@ -104,7 +71,6 @@ inputElement.addEventListener('change', (event) => {
         // Use timeArray and amplitudeArray for further processing
         // console.log('Time array:', timeArray);
         // console.log('Amplitude array:', amplitudeArray);
-        // const spic = document.getElementById('spectogram');
       
         const img = document.getElementById('img');
         img.setAttribute('src', '');
@@ -145,38 +111,7 @@ function decodeAudioData(data) {
 }
 
 
-
-//function that returns frequency and magnitude for spectogram plot
-function get_freq(amp_array) {
-  return new Promise((resolve, reject) => {
-    let array = [amp_array]
-    $.ajax({
-      type: "POST",
-      url: "/generate_frequency",
-      async: false,
-      contentType: "application/json; charset=utf-8",
-      data: JSON.stringify(array),
-      dataType: "json",
-      success: function(data) {
-        let freq = data.freq;
-        let amp = data.mag;
-        resolve({freq, amp});
-      },
-      error: function(jqXHR, textStatus, errorThrown) {
-        reject(errorThrown);
-      }
-    });
-  });
-}
-
-
-
-
-
-
 const Change = document.getElementById('change');
-
-
 
 Change.onclick = async ()=>{
 
@@ -214,8 +149,6 @@ const trace2={
 };
 Plotly.newPlot(plotDiv2, [trace2], layout, config);
 generateAudio();
-
-
 }
 
 function previewAudio(input) { ////playing the audio 
@@ -240,24 +173,24 @@ audioElement.setAttribute("src", "/generate_audio");
 
 
 
-  function sendsig(callback){
-    let array = [timeArray, amplitudeArray];
-    $.ajax({
-      type: "POST",
-      url: "/send_signal",
-      async: false,
-      contentType: "application/json; charset=utf-8",
-      data: JSON.stringify(array),
-      dataType: "json",
-      success: function(data) {
-        console.log('signal array:',data.sig);
-        
-        if (typeof callback === "function") {
-          callback();
-        }
-      },
-      error: function(jqXHR, textStatus, errorThrown) {
-        console.log(textStatus, errorThrown);
+function sendsig(callback){
+  let array = [timeArray, amplitudeArray];
+  $.ajax({
+    type: "POST",
+    url: "/send_signal",
+    async: false,
+    contentType: "application/json; charset=utf-8",
+    data: JSON.stringify(array),
+    dataType: "json",
+    success: function(data) {
+      console.log('signal array:',data.sig);
+      
+      if (typeof callback === "function") {
+        callback();
       }
-    });
-  }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log(textStatus, errorThrown);
+    }
+  });
+}
