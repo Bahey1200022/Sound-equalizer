@@ -85,6 +85,8 @@ def calculate_equalized():
     return jsonify({'equalized_sig': modified_signal})
 
 
+
+
 @app.route('/generate_audio')
 def generate_audio():
     
@@ -109,19 +111,32 @@ def generate_audio():
     return send_file(wav_filename, mimetype='audio/wav', as_attachment=True)
 
 
-@app.route('/generate_frequency', methods=['POST'])
-def generate_frequency():
-    freq_array = request.get_json()
-    if len(freq_array[0]) % 2 != 0:
-        return jsonify({'error': 'Invalid input array length'})
 
-    fft_amp = np.fft.fft(freq_array[0])
-    mag = np.abs(fft_amp)
-    mag = mag.tolist()
-    freq = np.fft.fftfreq(len(mag))
-    freq = freq.tolist()
 
-    return jsonify({'freq': freq, 'mag': mag})
+@app.route('/spectogram2')
+def get_result():
+    file_path = "spectrogram2.png"
+    if os.path.exists(file_path):
+        os.remove(file_path)
+    otime=np.copy(originatime)
+    oamp=np.copy(amplitudelist)
+    window = signal.windows.hann(1024)
+    noverlap = 512
+    # Generate a spectrogram using the signal
+    freq, time, Sxx = signal.spectrogram(oamp, fs=1.0/(otime[1]-otime[0]),
+                                        window=window, noverlap=noverlap)
+    plt.pcolormesh(time, freq, 10*np.log10(Sxx), cmap='viridis')
+    plt.xlabel('Time [s]')
+    plt.ylabel('Frequency [Hz]')
+    plt.colorbar()
+    plt.savefig('spectrogram2.png')
+    filename='spectrogram2.png'
+    return send_file(filename, mimetype='image/png')    
+    
+        
+
+
+
 
 
 @app.route('/spectogram')

@@ -138,6 +138,10 @@ function equalize(callback){
   });
 }
 equalize();
+const img2 = document.getElementById('img2');
+img2.setAttribute('src', '');
+img2.src = '/spectogram2';
+
 const trace2={
   x: timeArray,
   y: modifiedamplitude,name:"original",
