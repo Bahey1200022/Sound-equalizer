@@ -115,9 +115,9 @@ def generate_audio():
 
 @app.route('/spectogram2')
 def get_result():
-    file_path = "spectrogram2.png"
-    if os.path.exists(file_path):
-        os.remove(file_path)
+    file_path2 = "spectrogram2.png"
+    if os.path.exists(file_path2):
+        os.remove(file_path2)
     otime=np.copy(originatime)
     oamp=np.copy(amplitudelist)
     window = signal.windows.hann(1024)
@@ -130,8 +130,8 @@ def get_result():
     plt.ylabel('Frequency [Hz]')
     plt.colorbar()
     plt.savefig('spectrogram2.png')
-    filename='spectrogram2.png'
-    return send_file(filename, mimetype='image/png')    
+    filename2='spectrogram2.png'
+    return send_file(filename2, mimetype='image/png')    
     
         
 
