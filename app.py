@@ -1,4 +1,4 @@
-from flask import Flask, render_template,request, jsonify, send_file,session
+from flask import Flask, render_template,request, jsonify, send_file
 import numpy as np
 import os
 import scipy.signal as signal
@@ -7,7 +7,6 @@ from scipy.fft import fft, rfft
 from scipy.fft import fftfreq, rfftfreq
 import wave
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'
 
 
 @app.route('/')

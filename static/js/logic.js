@@ -6,6 +6,7 @@ modifiedamplitude=[];////equalized
 signalfile=false; //flag
 const img = document.getElementById('img');//html for specto 1
 const img2 = document.getElementById('img2');//html for specto 2
+var audioElement = document.getElementById("audioPlayer2");
 
 
 ///////////////////////////////PLOTS/////////////////////////////////////////////////
@@ -52,6 +53,8 @@ inputElement.addEventListener('change', (event) => {
       modifiedamplitude=[];
       img.setAttribute('src', '');
       img2.setAttribute('src', '');
+      audioElement.src = '';
+
       signalfile=false;
 
     }
@@ -174,7 +177,6 @@ function previewAudio(input) { ////playing the audio
 
 
 function generateAudio() {
-  var audioElement = document.getElementById("audioPlayer2");
   audioElement.src = '';
 
 audioElement.setAttribute("src", "/generate_audio");
