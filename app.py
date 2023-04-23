@@ -29,11 +29,24 @@ def equalize_freq(amplist,time,f,equalizedmag):
         
 @app.route('/send_signal', methods=['POST'])
 def get_signal():
-    array= request.get_json()
     global originatime 
-    originatime=array[0]
     global originalamp
+    array= request.get_json()
+    # global originatime 
+    originatime=array[0]
+    # global originalamp
     originalamp=array[1]
+    
+    file_path = "spectrogram.png"
+    if os.path.exists(file_path):
+        os.remove("spectrogram.png")
+    file_path2 = "spectrogram2.png"
+    if os.path.exists(file_path2):
+        os.remove(file_path2)        
+   
+
+
+    
     return jsonify({'sig': originalamp})
 
 
@@ -127,7 +140,7 @@ def get_result():
     plt.pcolormesh(time, freq, 10*np.log10(Sxx), cmap='viridis')
     plt.xlabel('Time [s]')
     plt.ylabel('Frequency [Hz]')
-    plt.colorbar()
+    # plt.colorbar()
     plt.savefig('spectrogram2.png')
     filename2='spectrogram2.png'
     return send_file(filename2, mimetype='image/png')    
@@ -142,7 +155,7 @@ def get_result():
 def get_image():
     file_path = "spectrogram.png"
     if os.path.exists(file_path):
-        os.remove(file_path)
+        os.remove("spectrogram.png")
     oamp=np.copy(originalamp)
     otime=np.copy(originatime)
     window = signal.windows.hann(1024)
@@ -153,7 +166,7 @@ def get_image():
     plt.pcolormesh(time, freq, 10*np.log10(Sxx), cmap='viridis')
     plt.xlabel('Time [s]')
     plt.ylabel('Frequency [Hz]')
-    plt.colorbar()
+    # plt.colorbar()
 
     # Save the plot as an image
     plt.savefig('spectrogram.png')
