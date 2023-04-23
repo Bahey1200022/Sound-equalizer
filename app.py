@@ -90,7 +90,7 @@ def calculate_equalized():
 @app.route('/generate_audio')
 def generate_audio():
     
-    file_path = "spectrogram.png"
+    file_path = "audio_file.wav"
     if os.path.exists(file_path):
         os.remove(file_path)
    

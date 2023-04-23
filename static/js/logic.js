@@ -1,9 +1,14 @@
 //////main arrays
 timeArray=[];
 amplitudeArray=[];
-////equalized
-modifiedamplitude=[];
-spectogramfft=[];
+modifiedamplitude=[];////equalized
+
+signalfile=false; //flag
+const img = document.getElementById('img');//html for specto 1
+const img2 = document.getElementById('img2');//html for specto 2
+
+
+///////////////////////////////PLOTS/////////////////////////////////////////////////
 const layout = { title: 'Original Signal', yaxis: { title: 'Amplitude', fixedrange: true }, xaxis: { title: 'Time', fixedrange: true, rangemode: 'tozero'}, width : 1200 }; // fixedrange -> No pan when there is no signal
 const plotDiv = document.getElementById('graph1');
 const config = {
@@ -11,14 +16,14 @@ const config = {
 }
 Plotly.newPlot(plotDiv, [], layout, config);
 
-
-
 const layout2 = { title: 'equalized Signal', yaxis: { title: 'Amplitude', fixedrange: true }, xaxis: { title: 'Time', fixedrange: true, rangemode: 'tozero'}, width : 1200 }; // fixedrange -> No pan when there is no signal
 const plotDiv2 = document.getElementById('graph2');
 const config2 = {
     displayModeBar: false, //disable plotlytool bar when there is no signal
 }
 Plotly.newPlot(plotDiv2, [], layout2, config2);
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////
 // Get all the sliders
 var sliders = document.querySelectorAll('.slider');
 
@@ -38,9 +43,21 @@ sliders.forEach(function(slider, index) {
 
 
 const inputElement = document.getElementById('sig');
-
 // Add event listener for file input change
 inputElement.addEventListener('change', (event) => {
+
+  if (signalfile)  ////if we already uploaded a sig
+    {timeArray=[];
+      amplitudeArray=[]; 
+      modifiedamplitude=[];
+      img.setAttribute('src', '');
+      img2.setAttribute('src', '');
+      signalfile=false;
+
+    }
+
+
+
   const file = event.target.files[0];
 
   // Create file reader
@@ -50,6 +67,7 @@ inputElement.addEventListener('change', (event) => {
   reader.onload = (e) => {
     const fileData = e.target.result;
 
+    
     // Decode audio data
     decodeAudioData(fileData)
       .then(buffer => {
@@ -67,17 +85,9 @@ inputElement.addEventListener('change', (event) => {
           timeArray.push(parseFloat(i / sampleRate));
           amplitudeArray.push( parseFloat(channelData[i]));
         }
-
-        // Use timeArray and amplitudeArray for further processing
-        // console.log('Time array:', timeArray);
-        // console.log('Amplitude array:', amplitudeArray);
-      
-        const img = document.getElementById('img');
-        img.setAttribute('src', '');
-
+         signalfile=true;
         sendsig();
-        img.src = '/spectogram';
-        // spic.appendChild(img);
+        img.src = '/spectogram'; ////drawing spectogram
         const trace={
           x: timeArray,
           y: amplitudeArray,name:"original",
@@ -138,10 +148,7 @@ function equalize(callback){
   });
 }
 equalize();
-const img2 = document.getElementById('img2');
-img2.setAttribute('src', '');
 img2.src = '/spectogram2';
-
 const trace2={
   x: timeArray,
   y: modifiedamplitude,name:"original",
