@@ -112,7 +112,7 @@ def generate_audio():
 
 
 
-@app.route('/spectogram2')
+@app.route('/specto2')
 def get_result():
     file_path2 = "spectrogram2.png"
     if os.path.exists(file_path2):
