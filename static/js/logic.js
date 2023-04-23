@@ -151,7 +151,7 @@ function equalize(callback){
   });
 }
 equalize();
-img2.src = '/spectogram2';
+img2.src = '/specto2';
 const trace2={
   x: timeArray,
   y: modifiedamplitude,name:"original",
