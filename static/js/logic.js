@@ -90,7 +90,8 @@ inputElement.addEventListener('change', (event) => {
         }
          signalfile=true;
         sendsig();
-        img.src = '/spectogram'; ////drawing spectogram
+        img.setAttribute("src",'/spectogram?' +  new Date().getTime());
+        //audioElement.setAttribute("src", "/generate_audio?" + new Date().getTime());
         const trace={
           x: timeArray,
           y: amplitudeArray,name:"original",
@@ -151,7 +152,8 @@ function equalize(callback){
   });
 }
 equalize();
-img2.src = '/specto2';
+img.setAttribute("src",'/specto2?' +  new Date().getTime());
+//img2.src = '/specto2';
 const trace2={
   x: timeArray,
   y: modifiedamplitude,name:"original",
