@@ -152,7 +152,7 @@ function equalize(callback){
   });
 }
 equalize();
-img.setAttribute("src",'/specto2?' +  new Date().getTime());
+img2.setAttribute("src",'/specto2?' +  new Date().getTime());
 //img2.src = '/specto2';
 const trace2={
   x: timeArray,
