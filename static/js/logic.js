@@ -179,7 +179,7 @@ function previewAudio(input) { ////playing the audio
 function generateAudio() {
   audioElement.src = '';
 
-audioElement.setAttribute("src", "/generate_audio");
+  audioElement.setAttribute("src", "/generate_audio?" + new Date().getTime()); //forcing the browser to make a new request to the server for the audio file.
 }
 
 
