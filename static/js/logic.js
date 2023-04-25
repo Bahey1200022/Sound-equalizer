@@ -9,15 +9,60 @@ const img2 = document.getElementById('img2');//html for specto 2
 var audioElement = document.getElementById("audioPlayer2");
 
 
+///////////////////////////////////////USER INTERFACE//////////////////////////////////////////////////////////
+
+const dropdownMenu = document.getElementById("dropdownMenu2");
+const options = dropdownMenu.getElementsByTagName("button");
+const selectedOption = document.getElementById("selected-option");
+const frequencyRangeBtn = document.getElementById('frequency-range-btn');
+const musicalInstrumentsBtn = document.getElementById('musical-instruments-btn');
+const vowelsBtn = document.getElementById('vowels-btn');
+const medicalBtn = document.getElementById('medical-btn');
+const generateBtn = document.getElementById('change');
+
+
+
+
+frequencyRangeBtn.addEventListener('click', () => {
+  dropdownMenu.innerText = "Frequency Range";
+  document.getElementById("sliders_1").style.display = "block";
+  generateBtn.style.display = "block";
+});
+
+musicalInstrumentsBtn.addEventListener('click', () => {
+  dropdownMenu.innerText = "Musical Instruments";
+  generateBtn.style.display = "block";
+  document.getElementById("sliders_1").style.display = "none";
+});
+
+vowelsBtn.addEventListener('click', () => {
+  dropdownMenu.innerText = "Vowels";
+  generateBtn.style.display = "block";
+  document.getElementById("sliders_1").style.display = "none";
+});
+
+medicalBtn.addEventListener('click', () => {
+  dropdownMenu.innerText = "Medical";
+  generateBtn.style.display = "block";
+  document.getElementById("sliders_1").style.display = "none";
+});
+
+
+
+
+
+
+
+
 ///////////////////////////////PLOTS/////////////////////////////////////////////////
-const layout = { title: 'Original Signal', yaxis: { title: 'Amplitude', fixedrange: true }, xaxis: { title: 'Time', fixedrange: true, rangemode: 'tozero'}, width : 1200 }; // fixedrange -> No pan when there is no signal
+const layout = { title: 'Original Signal', yaxis: { title: 'Amplitude', fixedrange: true }, xaxis: { title: 'Time', fixedrange: true, rangemode: 'tozero'}, width : 700 }; // fixedrange -> No pan when there is no signal
 const plotDiv = document.getElementById('graph1');
 const config = {
     displayModeBar: false, //disable plotlytool bar when there is no signal
 }
 Plotly.newPlot(plotDiv, [], layout, config);
 
-const layout2 = { title: 'equalized Signal', yaxis: { title: 'Amplitude', fixedrange: true }, xaxis: { title: 'Time', fixedrange: true, rangemode: 'tozero'}, width : 1200 }; // fixedrange -> No pan when there is no signal
+const layout2 = { title: 'equalized Signal', yaxis: { title: 'Amplitude', fixedrange: true }, xaxis: { title: 'Time', fixedrange: true, rangemode: 'tozero'}, width : 700 }; // fixedrange -> No pan when there is no signal
 const plotDiv2 = document.getElementById('graph2');
 const config2 = {
     displayModeBar: false, //disable plotlytool bar when there is no signal
