@@ -41,7 +41,26 @@ sliders.forEach(function(slider, index) {
     
   });
 });
+freq_music=[1,1];
 
+var sliders1 = document.querySelectorAll('.slider1');
+sliders1.forEach(function(slider, index) {
+  // Add an event listener to listen for changes in the slider value
+  slider.addEventListener('change', function() {
+    freq_music[index] = parseInt(this.value);
+    
+  });
+});
+freq_vowels=[1,1,1];
+
+var sliders2 = document.querySelectorAll('.slider2');
+sliders2.forEach(function(slider, index) {
+  // Add an event listener to listen for changes in the slider value
+  slider.addEventListener('change', function() {
+    freq_vowels[index] = parseInt(this.value);
+    
+  });
+});
 
 const inputElement = document.getElementById('sig');
 // Add event listener for file input change
@@ -77,7 +96,6 @@ inputElement.addEventListener('change', (event) => {
         // Extract audio data from buffer
         const channelData = buffer.getChannelData(0); // Assuming mono audio
         const sampleRate = buffer.sampleRate;
-
         // Create time and amplitude arrays
         const duration = buffer.duration;
         const numSamples = Math.floor(duration * sampleRate);
@@ -88,6 +106,7 @@ inputElement.addEventListener('change', (event) => {
           timeArray.push(parseFloat(i / sampleRate));
           amplitudeArray.push( parseFloat(channelData[i]));
         }
+
          signalfile=true;
         sendsig();
         img.setAttribute("src",'/spectogram?' +  new Date().getTime());
@@ -126,32 +145,20 @@ function decodeAudioData(data) {
 
 
 const Change = document.getElementById('change');
+var musicmode = document.getElementById("music");
+var vowelsmode = document.getElementById("vowels");
 
 Change.onclick = async ()=>{
 
-function equalize(callback){
-  let array = [timeArray, amplitudeArray,freq_1,freq_ranges];
-  $.ajax({
-    type: "POST",
-    url: "/calculate-equalized_sig",
-    async: false,
-    contentType: "application/json; charset=utf-8",
-    data: JSON.stringify(array),
-    dataType: "json",
-    success: function(data) {
-      modifiedamplitude = data.equalized_sig;
-      console.log('equalized array:',modifiedamplitude);
-      
-      if (typeof callback === "function") {
-        callback();
-      }
-    },
-    error: function(jqXHR, textStatus, errorThrown) {
-      console.log(textStatus, errorThrown);
-    }
-  });
+
+if (musicmode.checked){
+  equalizemusic();
 }
-equalize();
+else if(vowelsmode.checked ){
+  equalize_vowels();
+}
+else{
+equalize();}
 img2.setAttribute("src",'/specto2?' +  new Date().getTime());
 //img2.src = '/specto2';
 const trace2={
@@ -185,7 +192,9 @@ function generateAudio() {
 }
 
 
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 function sendsig(callback){
@@ -199,6 +208,87 @@ function sendsig(callback){
     dataType: "json",
     success: function(data) {
       console.log('signal array:',data.sig);
+      
+      if (typeof callback === "function") {
+        callback();
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log(textStatus, errorThrown);
+    }
+  });
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+function equalizemusic(callback){
+  ///////
+
+  let array = [freq_music];
+  $.ajax({
+    type: "POST",
+    url: "/music",
+    async: false,
+    contentType: "application/json; charset=utf-8",
+    data: JSON.stringify(array),
+    dataType: "json",
+    success: function(data) {
+      modifiedamplitude = data.equalized_sig;
+      console.log('equalized array:',modifiedamplitude);
+      
+      if (typeof callback === "function") {
+        callback();
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log(textStatus, errorThrown);
+    }
+  });
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function equalize(callback){
+  let array = [timeArray, amplitudeArray,freq_1,freq_ranges];
+  $.ajax({
+    type: "POST",
+    url: "/calculate-equalized_sig",
+    async: false,
+    contentType: "application/json; charset=utf-8",
+    data: JSON.stringify(array),
+    dataType: "json",
+    success: function(data) {
+      modifiedamplitude = data.equalized_sig;
+      console.log('equalized array:',modifiedamplitude);
+      
+      if (typeof callback === "function") {
+        callback();
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log(textStatus, errorThrown);
+    }
+  });
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function equalize_vowels(callback){
+  let array = [freq_vowels];
+  $.ajax({
+    type: "POST",
+    url: "/vowels",
+    async: false,
+    contentType: "application/json; charset=utf-8",
+    data: JSON.stringify(array),
+    dataType: "json",
+    success: function(data) {
+      modifiedamplitude = data.equalized_sig;
+      console.log('equalized array:',modifiedamplitude);
       
       if (typeof callback === "function") {
         callback();
