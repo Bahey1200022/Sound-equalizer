@@ -35,17 +35,17 @@ def drum_filter(amp, sr,mag):
 
     return filtered_signal
 
-# def fftguitar(amplist,time,equalizedmag):
-#     fft_amp = np.fft.fft(amplist) # FFT of signal
-#     freqs = np.fft.fftfreq(len(amplist), d=time/len(amplist)) # Frequency array
-#     freq_mask = (freqs >= 82) & (freqs <= 1082)
-#     #freqs_picked = freqs[freq_mask]
-#     new_mag = fft_amp[freq_mask] * float(equalizedmag)
-#     fft_amp[freq_mask] = new_mag
-#     modified_sig = np.fft.ifft(fft_amp) # Inverse FFT of modified FFT
-#     modified_sig=np.real(modified_sig)
-#     # modified_signal=modified_sig.tolist()
-#     return modified_sig
+def musicfft(amplist,time,equalizedmag,f1,f2):
+    fft_amp = np.fft.fft(amplist) # FFT of signal
+    freqs = np.fft.fftfreq(len(amplist), d=time/len(amplist)) # Frequency array
+    freq_mask = (freqs >= f1) & (freqs <= f2)
+    #freqs_picked = freqs[freq_mask]
+    new_mag = fft_amp[freq_mask] * 10*float(equalizedmag)
+    fft_amp[freq_mask] = new_mag
+    modified_sig = np.fft.ifft(fft_amp) # Inverse FFT of modified FFT
+    modified_sig=np.real(modified_sig)
+    # modified_signal=modified_sig.tolist()
+    return modified_sig
     
 
 def equalize_freq(amplist,time,f,equalizedmag):
@@ -135,12 +135,17 @@ def music():
     mag_change=np.copy(array[0])
     oamp=np.copy(originalamp)
     amp=oamp
-    if (mag_change[0]!=1):
-        amp=guitar_filter(oamp,48000,mag_change[0])
+    if (mag_change[0]!=1):#bass
+        amp=musicfft(oamp,originatime[len(originatime)-2],10*mag_change[0],40,246)
+        amp=musicfft(oamp,originatime[len(originatime)-2],-10*mag_change[0],246,1586)
+
     
         
-    if (mag_change[1] !=1):
-        amp=drum_filter(oamp,48000,mag_change[1])    
+    if (mag_change[1] !=1):#violin
+        amp=musicfft(oamp,originatime[len(originatime)-2],mag_change[0],246,1586)
+        amp=musicfft(oamp,originatime[len(originatime)-2],mag_change[0],40,246)
+
+
         
     modified_signal=amp.tolist()
     
