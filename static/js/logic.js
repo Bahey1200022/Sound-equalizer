@@ -20,14 +20,19 @@ const vowelsBtn = document.getElementById('vowels-btn');
 const medicalBtn = document.getElementById('medical-btn');
 const generateBtn = document.getElementById('change');
 
-
+let music = false;
+let vowel = false;
 
 
 frequencyRangeBtn.addEventListener('click', () => {
   dropdownMenu.innerText = "Frequency Range";
   document.getElementById("sliders_1").style.display = "block";
+  document.getElementById("sliders_2").style.display = "none";
+  document.getElementById("sliders_3").style.display = "none";
   document.getElementById('sig').style.display = "block";
   generateBtn.style.display = "block";
+  music = false;
+  vowel = false;
 });
 
 musicalInstrumentsBtn.addEventListener('click', () => {
@@ -35,6 +40,10 @@ musicalInstrumentsBtn.addEventListener('click', () => {
   generateBtn.style.display = "block";
   document.getElementById('sig').style.display = "block";
   document.getElementById("sliders_1").style.display = "none";
+  document.getElementById("sliders_2").style.display = "block";
+  document.getElementById("sliders_3").style.display = "none";
+  music = true;
+  vowel = false;
 });
 
 vowelsBtn.addEventListener('click', () => {
@@ -42,6 +51,10 @@ vowelsBtn.addEventListener('click', () => {
   generateBtn.style.display = "block";
   document.getElementById('sig').style.display = "block";
   document.getElementById("sliders_1").style.display = "none";
+  document.getElementById("sliders_2").style.display = "none";
+  document.getElementById("sliders_3").style.display = "block";
+  music = false;
+  vowel = true;
 });
 
 medicalBtn.addEventListener('click', () => {
@@ -194,18 +207,18 @@ function decodeAudioData(data) {
 
 
 const Change = document.getElementById('change');
-var musicmode = document.getElementById("music");
-var vowelsmode = document.getElementById("vowels");
-
 Change.onclick = async ()=>{
 
 
-if (musicmode.checked){
+  // Check if the musical instruments button is selected
+if (music) {
   equalizemusic();
 }
-else if(vowelsmode.checked ){
+
+else if(vowel){
   equalize_vowels();
 }
+
 else{
 equalize();}
 img2.setAttribute("src",'/specto2?' +  new Date().getTime());
