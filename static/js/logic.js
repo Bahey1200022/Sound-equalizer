@@ -26,24 +26,28 @@ const generateBtn = document.getElementById('change');
 frequencyRangeBtn.addEventListener('click', () => {
   dropdownMenu.innerText = "Frequency Range";
   document.getElementById("sliders_1").style.display = "block";
+  document.getElementById('sig').style.display = "block";
   generateBtn.style.display = "block";
 });
 
 musicalInstrumentsBtn.addEventListener('click', () => {
   dropdownMenu.innerText = "Musical Instruments";
   generateBtn.style.display = "block";
+  document.getElementById('sig').style.display = "block";
   document.getElementById("sliders_1").style.display = "none";
 });
 
 vowelsBtn.addEventListener('click', () => {
   dropdownMenu.innerText = "Vowels";
   generateBtn.style.display = "block";
+  document.getElementById('sig').style.display = "block";
   document.getElementById("sliders_1").style.display = "none";
 });
 
 medicalBtn.addEventListener('click', () => {
   dropdownMenu.innerText = "Medical";
   generateBtn.style.display = "block";
+  document.getElementById('sig').style.display = "block";
   document.getElementById("sliders_1").style.display = "none";
 });
 
