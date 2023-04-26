@@ -3,16 +3,50 @@ import numpy as np
 import os
 import scipy.signal as signal
 import matplotlib.pyplot as plt
+from scipy.signal import butter, filtfilt
+
 from scipy.fft import fft, rfft
 from scipy.fft import fftfreq, rfftfreq
 import wave
 app = Flask(__name__)
+######################################################################################################################
+######################################################################################################################################################
+#####################################################################
+##### PROCESSING
+def guitar_filter(amp, sr,mag):
+    # Define the frequency range of the guitar sounds (82 Hz - 1046 Hz)
+    low = 82 / (sr / 2)
+    high = 1046 / (sr / 2)
 
+    # Apply a Butterworth bandpass filter to the signal
+    b, a = signal.butter(4, [low, high], btype='bandpass')
+    filtered_signal = mag*10* signal.filtfilt(b, a, amp) 
 
-@app.route('/')
-def equalizer():
-    return render_template('main.html')
+    return filtered_signal
 
+def drum_filter(amp, sr,mag):
+    # Define the frequency range of the drum sounds (200 Hz - 400 Hz)
+    low = 200 / (sr / 2)
+    high = 400 / (sr / 2)
+
+    # Apply a Butterworth bandpass filter to the signal
+    b, a = butter(4, [low, high], btype='bandpass')
+    filtered_signal = mag *filtfilt(b, a, amp)
+
+    return filtered_signal
+
+def musicfft(amplist,time,equalizedmag,f1,f2):
+    fft_amp = np.fft.fft(amplist) # FFT of signal
+    freqs = np.fft.fftfreq(len(amplist), d=time/len(amplist)) # Frequency array
+    freq_mask = (freqs >= f1) & (freqs <= f2)
+    #freqs_picked = freqs[freq_mask]
+    new_mag = fft_amp[freq_mask] * 10*float(equalizedmag)
+    fft_amp[freq_mask] = new_mag
+    modified_sig = np.fft.ifft(fft_amp) # Inverse FFT of modified FFT
+    modified_sig=np.real(modified_sig)
+    # modified_signal=modified_sig.tolist()
+    return modified_sig
+    
 
 def equalize_freq(amplist,time,f,equalizedmag):
         fft_amp = np.fft.fft(amplist) # FFT of signal
@@ -25,6 +59,29 @@ def equalize_freq(amplist,time,f,equalizedmag):
         modified_sig=np.real(modified_sig)
         # modified_signal=modified_sig.tolist()
         return modified_sig
+
+def equalize_vowel(amplist,time,equalizedmag,range11,range12,range21,range22):
+    fft_amp = np.fft.fft(amplist) # FFT of signal
+    freqs = np.fft.fftfreq(len(amplist), d=time/len(amplist)) # Frequency array
+    freq_mask = (freqs >= range11) & (freqs <= range12)
+    mask2 = (freqs >= range21) & (freqs <= range22)
+    new_mag = fft_amp[freq_mask & mask2] * float(equalizedmag)
+    fft_amp[freq_mask & mask2] = new_mag
+    modified_sig = np.fft.ifft(fft_amp) # Inverse FFT of modified FFT
+    modified_sig=np.real(modified_sig)
+    print("tamam ?")
+    return modified_sig
+    
+
+
+    
+################################################################################################################################
+#################################################################################################################
+@app.route('/')
+def equalizer():
+    return render_template('main.html')
+
+
 
         
 @app.route('/send_signal', methods=['POST'])
@@ -44,9 +101,6 @@ def get_signal():
     if os.path.exists(file_path2):
         os.remove(file_path2)        
    
-
-
-    
     return jsonify({'sig': originalamp})
 
 
@@ -63,41 +117,72 @@ def calculate_equalized():
     freqadjusted=np.copy(array[3])
     amp=np.copy(array[1])
     sigtime=array[0][len(array[0])-2]
-    #timelist=array[0].copy()
-    # timesig=np.copy(array[0])
-    # Perform FFT
-    # fft_amp = np.fft.fft(amp) # FFT of signal
-    # freqs = np.fft.fftfreq(len(amp), d=sigtime/len(amp)) # Frequency array
-    
-    # f_index = np.abs(freqs - freqadjusted).argmin() #difference betwween element and freq==0
-    
-    # mag = np.abs(fft_amp[f_index])
-    
-    # new_mag = fft_amp[f_index] * float(mag_change)
-
-    # # Apply new magnitude to FFT
-    # fft_amp[f_index] = new_mag
-    
-    # modified_sig = np.fft.ifft(fft_amp) # Inverse FFT of modified FFT
-    
-    # modified_sig=np.real(modified_sig)
-    # modified_signal=modified_sig.tolist()
     
     for i in range(len(freqadjusted)):
         amp=equalize_freq(amp,sigtime,freqadjusted[i],mag_change[i])
         
-        
-        
     modified_signal=amp.tolist()
-    
     global amplitudelist
     amplitudelist = modified_signal.copy()
     
      
     return jsonify({'equalized_sig': modified_signal})
+############################################################################################################################
+###################################################################################################3
+@app.route('/music', methods=['POST'])
+def music():
+    array= request.get_json()
+    mag_change=np.copy(array[0])
+    oamp=np.copy(originalamp)
+    amp=oamp
+    if (mag_change[0]!=1):#bass
+        amp=musicfft(oamp,originatime[len(originatime)-2],10*mag_change[0],40,246)
+        amp=musicfft(oamp,originatime[len(originatime)-2],-10*mag_change[0],246,1586)
+
+    
+        
+    if (mag_change[1] !=1):#violin
+        amp=musicfft(oamp,originatime[len(originatime)-2],mag_change[0],246,1586)
+        amp=musicfft(oamp,originatime[len(originatime)-2],mag_change[0],40,246)
 
 
+        
+    modified_signal=amp.tolist()
+    
+    global amplitudelist
+    amplitudelist = modified_signal.copy()    
+        
+    return jsonify({'equalized_sig': modified_signal})
+###################################################################################################################################################
+##################################################################################################################################
+@app.route('/vowels', methods=['POST'])
+def vowels():
+    array= request.get_json()
+    mag_change=np.copy(array[0])
+    oamp=np.copy(originalamp)
+    amp=oamp
+    if (mag_change[0]!=1):# o
+        amp=equalize_vowel(oamp,originatime[len(originatime)-2],mag_change[0],300,700,800,1200)
+    if (mag_change[1]!=1):#330-3300  A
+        amp=equalize_vowel(oamp,originatime[len(originatime)-2],mag_change[1],600,1000,1000,3000)
+    if (mag_change[2]!=1): #i
+        amp=equalize_vowel(oamp,originatime[len(originatime)-2],mag_change[1],250,900,1800,2400)
 
+    
+        
+ 
+
+    modified_signal=amp.tolist()
+    global amplitudelist
+    amplitudelist = modified_signal.copy()
+    return jsonify({'equalized_sig': modified_signal})
+
+    
+##################################################################################################################################
+##################################################################################################################################
+##################################################################################################################################
+##################################################################################################################################
+#   spectogram and audio convergence
 
 @app.route('/generate_audio')
 def generate_audio():
@@ -116,7 +201,7 @@ def generate_audio():
     with wave.open(wav_filename, 'wb') as wav_file:
         wav_file.setnchannels(1)
         wav_file.setsampwidth(2)
-        wav_file.setframerate(44100)
+        wav_file.setframerate(48000)
         wav_file.writeframes(equalizedamp)
 
     # Return the WAV file as a binary response
@@ -176,5 +261,9 @@ def get_image():
 
 
 
+    
+        
+    
+    
 if __name__ == '__main__':
     app.run(debug=True)
