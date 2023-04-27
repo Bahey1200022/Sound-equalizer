@@ -90,19 +90,22 @@ medicalBtn.addEventListener('click', () => {
 
 
 ///////////////////////////////PLOTS/////////////////////////////////////////////////
+var trace1 = { x: [], y: [], mode: 'lines', line: { color: 'blue' }, visible: true };
+var trace2 = { x: [], y: [], mode: 'lines', line: { color: 'blue' }, visible: true };
 const layout = { title: 'Original Signal', yaxis: { title: 'Amplitude', fixedrange: true }, xaxis: { title: 'Time', fixedrange: true, rangemode: 'tozero'}, width : 700 }; // fixedrange -> No pan when there is no signal
 const plotDiv = document.getElementById('graph1');
 const config = {
-    displayModeBar: false, //disable plotlytool bar when there is no signal
+    displayModeBar: true, //disable plotlytool bar when there is no signal
 }
-Plotly.newPlot(plotDiv, [], layout, config);
+Plotly.newPlot(plotDiv, [trace1], layout, config);
 
 const layout2 = { title: 'equalized Signal', yaxis: { title: 'Amplitude', fixedrange: true }, xaxis: { title: 'Time', fixedrange: true, rangemode: 'tozero'}, width : 700 }; // fixedrange -> No pan when there is no signal
 const plotDiv2 = document.getElementById('graph2');
 const config2 = {
-    displayModeBar: false, //disable plotlytool bar when there is no signal
+    displayModeBar: true, //disable plotlytool bar when there is no signal
 }
-Plotly.newPlot(plotDiv2, [], layout2, config2);
+Plotly.newPlot(plotDiv2, [trace2], layout2, config2);
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////
 // Get all the sliders
@@ -201,7 +204,7 @@ inputElement.addEventListener('change', (event) => {
         sendsig();
         img.setAttribute("src",'/spectogram?' +  new Date().getTime());
         //audioElement.setAttribute("src", "/generate_audio?" + new Date().getTime());
-        const trace={
+         trace1={
           x: timeArray,
           y: amplitudeArray,name:"original",
           type: 'scatter',
@@ -210,7 +213,7 @@ inputElement.addEventListener('change', (event) => {
               color: 'blue'
           },
         };
-        Plotly.newPlot(plotDiv, [trace], layout, config);
+        Plotly.newPlot(plotDiv, [trace1], layout, config);
 
         
       })
@@ -254,7 +257,7 @@ else{
 equalize();}
 img2.setAttribute("src",'/specto2?' +  new Date().getTime());
 //img2.src = '/specto2';
-const trace2={
+ trace2={
   x: timeArray,
   y: modifiedamplitude,name:"original",
   type: 'scatter',
@@ -417,6 +420,8 @@ function equalize_med(callback){
     }
   });
 }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -457,38 +462,132 @@ function equalize_med(callback){
             }
         })
 
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////
+
 const playBtn = document.getElementById('playBtn');
 const pauseBtn = document.getElementById('pauseBtn');
-const stop = document.getElementById('stop');
+const stopbtn = document.getElementById('stop');
 const speedSlider = document.getElementById('cinespeed');
 var cinespeed = speedSlider.defaultValue; //initial value for speed
 var playAnim = false;
 var i = 0;
+var interval;
 
 playBtn.addEventListener('click', function() {
   // Plotly.deleteTraces(plotDiv, 1);Plotly.deleteTraces(plotDiv2, 0);
   if(!playAnim)
   {
-    Plotly.deleteTraces(plotDiv, 0);Plotly.deleteTraces(plotDiv2, 0);
+    // Plotly.deleteTraces(plotDiv, 0);
+    // Plotly.deleteTraces(plotDiv2, 0);
       playAnim = true;
       interval = setInterval(() => {
       trace1.x.push(timeArray[i]);
       trace1.y.push(amplitudeArray[i]);
+      trace2.x.push(timeArray[i]);
+      trace2.y.push(modifiedamplitude[i]);
+
       Plotly.redraw(plotDiv);
+      Plotly.redraw(plotDiv2);
+
       i++;
 
       //if animation has ended reset i to 0 to start it again
-      if (i >= Time.length) {
+      if (i >= timeArray.length) {
           clearInterval(interval);
         }
       
-      Plotly.relayout(plotDiv, { xaxis: { range: [Time[timeArray.max(0, i - 100)], timeArray[i]] }});
+      Plotly.relayout(plotDiv, { xaxis: { range: [timeArray[Math.max(0, i - 100)], timeArray[i]] }});
+      Plotly.relayout(plotDiv2, { xaxis: { range: [timeArray[Math.max(0, i - 100)], timeArray[i]] }});
+
     }, cinespeed-50);
 
 
   }
 })
 
+pauseBtn.addEventListener('click', function() {
+    if(playAnim)
+    {
+        playAnim = false;
+        clearInterval(interval);
+
+    }
+    
+});
+
+speedSlider.addEventListener('input', function() {
+  cinespeed = speedSlider.max - this.value;  //slider max value - new value to reverse
+  if(playAnim) {
+      clearInterval(interval);
+      interval = setInterval(() => {
+        trace1.x.push(timeArray[i]);
+        trace1.y.push(amplitudeArray[i]);
+        trace2.x.push(timeArray[i]);
+        trace2.y.push(modifiedamplitude[i]);
+  
+        Plotly.redraw(plotDiv);
+        Plotly.redraw(plotDiv2);
+          i++;
+          
+          if (i >= Time.length) {
+          clearInterval(interval);
+      }
+
+      Plotly.relayout(plotDiv, { xaxis: { range: [timeArray[Math.max(0, i - 100)], timeArray[i]] }});
+      Plotly.relayout(plotDiv2, { xaxis: { range: [timeArray[Math.max(0, i - 100)], timeArray[i]] }});
+  }, cinespeed-50);
+  }
+});
+
+stopbtn.addEventListener('click', function() {
+
+  if(playAnim)
+  {
+      playAnim = false;
+      clearInterval(interval);
+      const trace={
+        x: timeArray,
+        y: amplitudeArray,name:"original",
+        type: 'scatter',
+        mode: 'lines',
+        line: {
+            color: 'blue'
+        },
+      };
+      Plotly.newPlot(plotDiv, [trace], layout, config);
+      const trace2={
+        x: timeArray,
+        y: modifiedamplitude,name:"original",
+        type: 'scatter',
+        mode: 'lines',
+        line: {
+            color: 'blue'
+        },
+      };
+      Plotly.newPlot(plotDiv2, [trace2], layout, config);
+  }
+
+
+})
+
+let isRelayouting = false;         //define a flag to avoid infinite loop
+
+plotDiv.on('plotly_relayout', function(eventData) {
+  if ( !isRelayouting) {
+    isRelayouting = true;
+    Plotly.relayout(plotDiv2, eventData)
+    .then(() => {
+        isRelayouting = false;
+    });
+}
+});
+
+plotDiv2.on('plotly_relayout', function(eventData) {
+  if ( !isRelayouting) {
+    isRelayouting = true;
+    Plotly.relayout(plotDiv, eventData)
+    .then(() => {
+        isRelayouting = false;
+    });
+}
+});       
