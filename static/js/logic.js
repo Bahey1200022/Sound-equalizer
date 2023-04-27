@@ -22,17 +22,20 @@ const generateBtn = document.getElementById('change');
 
 let music = false;
 let vowel = false;
-
+let med =false;
 
 frequencyRangeBtn.addEventListener('click', () => {
   dropdownMenu.innerText = "Frequency Range";
   document.getElementById("sliders_1").style.display = "block";
   document.getElementById("sliders_2").style.display = "none";
   document.getElementById("sliders_3").style.display = "none";
+  document.getElementById("sliders_4").style.display = "none";
+
   document.getElementById('sig').style.display = "block";
   generateBtn.style.display = "block";
   music = false;
   vowel = false;
+  med=false;
 });
 
 musicalInstrumentsBtn.addEventListener('click', () => {
@@ -42,8 +45,12 @@ musicalInstrumentsBtn.addEventListener('click', () => {
   document.getElementById("sliders_1").style.display = "none";
   document.getElementById("sliders_2").style.display = "block";
   document.getElementById("sliders_3").style.display = "none";
+  document.getElementById("sliders_4").style.display = "none";
+
   music = true;
   vowel = false;
+  med=false;
+
 });
 
 vowelsBtn.addEventListener('click', () => {
@@ -53,8 +60,12 @@ vowelsBtn.addEventListener('click', () => {
   document.getElementById("sliders_1").style.display = "none";
   document.getElementById("sliders_2").style.display = "none";
   document.getElementById("sliders_3").style.display = "block";
+  document.getElementById("sliders_4").style.display = "none";
+
   music = false;
   vowel = true;
+  med=false;
+
 });
 
 medicalBtn.addEventListener('click', () => {
@@ -62,6 +73,13 @@ medicalBtn.addEventListener('click', () => {
   generateBtn.style.display = "block";
   document.getElementById('sig').style.display = "block";
   document.getElementById("sliders_1").style.display = "none";
+  document.getElementById("sliders_2").style.display = "none";
+  document.getElementById("sliders_3").style.display = "none";
+  document.getElementById("sliders_4").style.display = "block";
+  music = false;
+  vowel = false;
+  med=true;
+
 });
 
 
@@ -120,6 +138,16 @@ sliders2.forEach(function(slider, index) {
   // Add an event listener to listen for changes in the slider value
   slider.addEventListener('change', function() {
     freq_vowels[index] = parseInt(this.value);
+    
+  });
+});
+freq_med=[1];
+
+var sliders3 = document.querySelectorAll('.slider3');
+sliders3.forEach(function(slider, index) {
+  // Add an event listener to listen for changes in the slider value
+  slider.addEventListener('change', function() {
+    freq_med[index] = parseInt(this.value);
     
   });
 });
@@ -218,6 +246,9 @@ if (music) {
 else if(vowel){
   equalize_vowels();
 }
+
+else if(med){
+  equalize_med();}
 
 else{
 equalize();}
@@ -344,6 +375,31 @@ function equalize_vowels(callback){
   $.ajax({
     type: "POST",
     url: "/vowels",
+    async: false,
+    contentType: "application/json; charset=utf-8",
+    data: JSON.stringify(array),
+    dataType: "json",
+    success: function(data) {
+      modifiedamplitude = data.equalized_sig;
+      console.log('equalized array:',modifiedamplitude);
+      
+      if (typeof callback === "function") {
+        callback();
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log(textStatus, errorThrown);
+    }
+  });
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function equalize_med(callback){
+  let array = [freq_med];
+  $.ajax({
+    type: "POST",
+    url: "/medical",
     async: false,
     contentType: "application/json; charset=utf-8",
     data: JSON.stringify(array),
