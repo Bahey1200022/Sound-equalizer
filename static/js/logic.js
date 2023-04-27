@@ -417,3 +417,78 @@ function equalize_med(callback){
     }
   });
 }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        const hideb = document.getElementById('Show/Hide');
+        const labl1 = document.getElementById('show_lbl1');
+
+
+        hideb.addEventListener('change', (event) => {
+            if(event.currentTarget.checked){
+              document.getElementById("spectogram").style.display = "none";
+              // document.getElementById("show_lbl1").style.display = "none";
+
+
+            }
+            else
+            {
+              document.getElementById("spectogram").style.display = "block";
+              // document.getElementById("show_lbl1").style.display = "block";
+
+            }
+        })
+
+
+        //define a boolean that changes if rewind is checked to execute it for plot2
+        const hideb2 = document.getElementById('Show/Hide2');
+
+        hideb2.addEventListener('change', (event) => {
+            if(event.currentTarget.checked){
+              document.getElementById("spectogram2").style.display = "none";
+              // document.getElementById("show_lbl2").style.display = "none";
+
+            }
+            else
+            {
+              document.getElementById("spectogram2").style.display = "block";
+              // document.getElementById("show_lbl2").style.display = "block";
+
+            }
+        })
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////
+const playBtn = document.getElementById('playBtn');
+const pauseBtn = document.getElementById('pauseBtn');
+const stop = document.getElementById('stop');
+const speedSlider = document.getElementById('cinespeed');
+var cinespeed = speedSlider.defaultValue; //initial value for speed
+var playAnim = false;
+var i = 0;
+
+playBtn.addEventListener('click', function() {
+  // Plotly.deleteTraces(plotDiv, 1);Plotly.deleteTraces(plotDiv2, 0);
+  if(!playAnim)
+  {
+    Plotly.deleteTraces(plotDiv, 0);Plotly.deleteTraces(plotDiv2, 0);
+      playAnim = true;
+      interval = setInterval(() => {
+      trace1.x.push(timeArray[i]);
+      trace1.y.push(amplitudeArray[i]);
+      Plotly.redraw(plotDiv);
+      i++;
+
+      //if animation has ended reset i to 0 to start it again
+      if (i >= Time.length) {
+          clearInterval(interval);
+        }
+      
+      Plotly.relayout(plotDiv, { xaxis: { range: [Time[timeArray.max(0, i - 100)], timeArray[i]] }});
+    }, cinespeed-50);
+
+
+  }
+})
+

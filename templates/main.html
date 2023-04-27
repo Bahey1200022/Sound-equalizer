@@ -158,7 +158,17 @@
                 <audio id="audioPlayer" controls>
                 </audio><br>
               </div>
+               <div>
+                <button id="playBtn">Play</button>
+            <button id="pauseBtn">Pause</button>
+            <button id="stop">Stop</button><br>
+            <label for="cinespeed" id="cinespeed_lbl">Cinespeed:</label>
+                <input type="range" min="1" max="100" value="50" class="slider" id="cinespeed">
+
+              </div>
               <div id="graph1"></div>
+              <label for="Show/Hide" id="show_lbl1">Hide Spectogram</label>
+              <input type="checkbox" id="Show/Hide">
               <div id="spectogram"><img id="img"/></div>
             </div>
         
@@ -167,6 +177,8 @@
                 <audio id="audioPlayer2" controls></audio><br>
               </div>
                 <div id="graph2"></div>
+                <label for="Show/Hide2" id="show_lbl2">Hide Spectogram</label>
+              <input type="checkbox" id="Show/Hide2">
                 <div id="spectogram2"><img id="img2"/></div>
             </div>
           </div>
