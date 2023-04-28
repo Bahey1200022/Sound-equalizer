@@ -211,9 +211,9 @@ def medical():
     amp=oamp
     #
     if (mag_change[0]!=1 and mag_change[0]!=0 ):
-        amp=bandpass_filter(oamp,4800,mag_change[0],20,80)
+        amp=bandpass_filter(oamp,4800,mag_change[0],20,80) #Amplify freq, from 20 to 80
     elif (mag_change[0]==0):
-        amp=musicfft(oamp,originatime[len(originatime)-2],1,81,150)    
+        amp=musicfft(oamp,originatime[len(originatime)-2],1,81,150) #If zero, cancel it   
     #
     modified_signal=amp.tolist()
     global amplitudelist

@@ -163,6 +163,8 @@ const inputElement = document.getElementById('sig');
 // Add event listener for file input change
 inputElement.addEventListener('change', (event) => {
 
+  document.getElementById('sig_control').style.display = "block";
+
   if (signalfile)  ////if we already uploaded a sig
     {timeArray=[];
       amplitudeArray=[]; 
@@ -455,6 +457,7 @@ function equalize_med(callback){
 
 
         hideb.addEventListener('change', (event) => {
+          
             if(event.currentTarget.checked){
               document.getElementById("spectogram").style.display = "none";
               // document.getElementById("show_lbl1").style.display = "none";
