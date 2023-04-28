@@ -128,7 +128,7 @@
 
   <div class="d-flex justify-content-center">
     <div class="sliders_3_container" id="sliders_4" style="display: none;">
-      <label for="O" id="label1">s4-s3 sounds:</label>
+      <label for="O" id="label1">disease:</label>
       <input type="range" min="0"  max="10" value="1" class="slider3" id="o"><br>
 
         
@@ -158,15 +158,9 @@
                 <audio id="audioPlayer" controls>
                 </audio><br>
               </div>
-               <div>
-                <button id="playBtn">Play</button>
-            <button id="pauseBtn">Pause</button>
-            <button id="stop">Stop</button><br>
-            <label for="cinespeed" id="cinespeed_lbl">Cinespeed:</label>
-            <input type="range" min="1" max="100" value="50" class="slider" id="cinespeed">
 
-              </div>
               <div id="graph1"></div>
+              <div id="full_graph1"></div>
               <label for="Show/Hide" id="show_lbl1">Hide Spectogram</label>
               <input type="checkbox" id="Show/Hide">
               <div id="spectogram"><img id="img"/></div>
@@ -177,9 +171,19 @@
                 <audio id="audioPlayer2" controls></audio><br>
               </div>
                 <div id="graph2"></div>
+                <div id="full_graph2"></div>
                 <label for="Show/Hide2" id="show_lbl2">Hide Spectogram</label>
               <input type="checkbox" id="Show/Hide2">
                 <div id="spectogram2"><img id="img2"/></div>
+            </div>
+
+            <div>
+              <button id="playBtn">Play</button>
+          <button id="pauseBtn">Pause</button>
+          <button id="stop">Stop</button><br>
+          <label for="cinespeed" id="cinespeed_lbl">Cinespeed:</label>
+          <input type="range" min="1" max="100" value="50" class="slider" id="cinespeed">
+
             </div>
           </div>
         </div>
