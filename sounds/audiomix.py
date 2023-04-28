@@ -9,7 +9,7 @@ duration = 5  # seconds
 # freq_ranges=[85,102,146,190,234,278,322,366,410,454]
 # amplitudes = [0.9, 0.2, 0.2,0.02,0.002,0.12,0.9,0.8,0.2,0.2]
 frequencies = [80,100, 350,300,410,200,250 ]  # Hz
-amplitudes = [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5]
+amplitudes = [0.5, 0.5, 0.5, 0.5, 0.7, 0.5, 0.5]
 
 # Generate the audio data
 t = np.linspace(0, duration, int(sampling_rate * duration), endpoint=False)
@@ -24,4 +24,4 @@ audio_data /= np.max(np.abs(audio_data))
 audio_data = np.array(audio_data * (2**15 - 1), dtype=np.int16)
 
 # Save the audio data to a WAV file
-wav.write('output.wav', sampling_rate, audio_data)
+wav.write('synthetic_file.wav', sampling_rate, audio_data)
