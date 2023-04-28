@@ -51,17 +51,17 @@ def equalize_freq(amplist,time,f,equalizedmag):
         # modified_signal=modified_sig.tolist()
         return modified_sig
 
-def equalize_vowel(amplist,time,equalizedmag,range11,range12,range21,range22):
-    fft_amp = np.fft.fft(amplist) # FFT of signal
-    freqs = np.fft.fftfreq(len(amplist), d=time/len(amplist)) # Frequency array
-    freq_mask = (freqs >= range11) & (freqs <= range12)
-    mask2 = (freqs >= range21) & (freqs <= range22)
-    new_mag = fft_amp[freq_mask & mask2] * float(equalizedmag)
-    fft_amp[freq_mask & mask2] = new_mag
-    modified_sig = np.fft.ifft(fft_amp) # Inverse FFT of modified FFT
-    modified_sig=np.real(modified_sig)
-    print("tamam ?")
-    return modified_sig
+# def equalize_vowel(amplist,time,equalizedmag,range11,range12,range21,range22):
+#     fft_amp = np.fft.fft(amplist) # FFT of signal      uselesss
+#     freqs = np.fft.fftfreq(len(amplist), d=time/len(amplist)) # Frequency array
+#     freq_mask = (freqs >= range11) & (freqs <= range12)
+#     mask2 = (freqs >= range21) & (freqs <= range22)
+#     new_mag = fft_amp[freq_mask & mask2] * float(equalizedmag)
+#     fft_amp[freq_mask & mask2] = new_mag
+#     modified_sig = np.fft.ifft(fft_amp) # Inverse FFT of modified FFT
+#     modified_sig=np.real(modified_sig)
+#     print("tamam ?")
+#     return modified_sig
     
 
 
@@ -84,6 +84,18 @@ def get_signal():
     originatime=array[0]
     # global originalamp
     originalamp=array[1]
+    #largest freq.
+    fft_data = np.fft.fft(array[1])
+    T=array[0][len(array[0])-2]
+    
+    freq = np.fft.fftfreq(len(array[1]), d=T/len(array[1]))
+    fft_data = np.abs(fft_data)
+    fft_data = np.round(fft_data, 2)
+        # Find the index of the all maximum values in the FFT array
+    max_index = np.where(np.abs(fft_data) == np.max(np.abs(fft_data)))
+    max_frequency = 0
+    for i in max_index[0]:
+        max_frequency = max(max_frequency, np.abs(freq[i]))
     
     file_path = "spectrogram.png"
     if os.path.exists(file_path):
@@ -92,7 +104,7 @@ def get_signal():
     if os.path.exists(file_path2):
         os.remove(file_path2)        
    
-    return jsonify({'sig': originalamp})
+    return jsonify({'sig': max_frequency})
 
 
     
@@ -152,12 +164,32 @@ def vowels():
     mag_change=np.copy(array[0])
     oamp=np.copy(originalamp)
     amp=oamp
-    if (mag_change[0]!=1):# o
-        amp=bandpass_filter(oamp,4800,mag_change[0],350,700)
+    if (mag_change[0]!=1 ):# o
+        if (mag_change[0]==0 ):
+            amp=musicfft(oamp,originatime[len(originatime)-2],1,20,35)
+            amp=bandpass_filter(oamp,4800,1,20,35)
+            amp=bandpass_filter(oamp,4800,1,350,700)
+
+        else:
+            amp=musicfft(oamp,originatime[len(originatime)-2],mag_change[0],35,70)
+            amp=bandpass_filter(oamp,4800,mag_change[0],35,70)
     if (mag_change[1]!=1):#330-3300  A
-        amp=equalize_vowel(oamp,originatime[len(originatime)-2],mag_change[1],600,1000,1000,3000)
+        if (mag_change[1]==0 ):
+            amp=musicfft(oamp,originatime[len(originatime)-2],1,35,70)
+            amp=bandpass_filter(oamp,4800,1,35,70)
+            amp=bandpass_filter(oamp,4800,1,350,700)
+        else:
+            amp=musicfft(oamp,originatime[len(originatime)-2],mag_change[1],20,35)
+            amp=bandpass_filter(oamp,4800,mag_change[1],20,35)    
     if (mag_change[2]!=1): #i
-        amp=bandpass_filter(oamp,4800,mag_change[0],1000,7000)
+        if (mag_change[2]==0 ):
+            amp=musicfft(oamp,originatime[len(originatime)-2],1,35,70)
+            amp=bandpass_filter(oamp,4800,1,35,70)
+            amp=musicfft(oamp,originatime[len(originatime)-2],1,20,35)
+            amp=bandpass_filter(oamp,4800,1,20,35)
+            
+        else:
+            amp=bandpass_filter(oamp,4800,mag_change[2],350,700)
 
     
         
@@ -186,6 +218,7 @@ def medical():
     global amplitudelist
     amplitudelist = modified_signal.copy()
     return jsonify({'equalized_sig': modified_signal})
+
     
 
     

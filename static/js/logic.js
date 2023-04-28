@@ -303,7 +303,7 @@ function sendsig(callback){
     data: JSON.stringify(array),
     dataType: "json",
     success: function(data) {
-      console.log('signal array:',data.sig);
+      console.log('signal max frequency:',data.sig);
       
       if (typeof callback === "function") {
         callback();
