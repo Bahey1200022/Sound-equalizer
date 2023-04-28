@@ -13,27 +13,18 @@ app = Flask(__name__)
 ######################################################################################################################################################
 #####################################################################
 ##### PROCESSING
-def i_filter(amp, sr,mag):
+def bandpass_filter(amp, sr,mag,lowr,highr):
     # Define the frequency range of the guitar sounds (82 Hz - 1046 Hz)
-    low = 350 / (sr / 2)
-    high = 700 / (sr / 2)
+    low = lowr / (sr / 2)
+    high = highr / (sr / 2)
 
     # Apply a Butterworth bandpass filter to the signal
-    b, a = signal.butter(4, [low, high], btype='bandpass')
+    b, a = signal.butter(4, [low, high], btype='bandpass' )
     filtered_signal = mag*10* signal.filtfilt(b, a, amp) 
 
     return filtered_signal
 
-def o_filter(amp, sr,mag):
-    # Define the frequency range of the drum sounds (200 Hz - 400 Hz)
-    low = 100 / (sr / 2)
-    high = 200 / (sr / 2)
 
-    # Apply a Butterworth bandpass filter to the signal
-    b, a = butter(4, [low, high], btype='bandpass')
-    filtered_signal = mag *filtfilt(b, a, amp)
-
-    return filtered_signal
 
 def musicfft(amplist,time,equalizedmag,f1,f2):
     fft_amp = np.fft.fft(amplist) # FFT of signal
@@ -162,11 +153,11 @@ def vowels():
     oamp=np.copy(originalamp)
     amp=oamp
     if (mag_change[0]!=1):# o
-        amp=o_filter(oamp,4800,mag_change[0])
+        amp=bandpass_filter(oamp,4800,mag_change[0],350,700)
     if (mag_change[1]!=1):#330-3300  A
         amp=equalize_vowel(oamp,originatime[len(originatime)-2],mag_change[1],600,1000,1000,3000)
     if (mag_change[2]!=1): #i
-        amp=i_filter(oamp,4800,mag_change[2])
+        amp=bandpass_filter(oamp,4800,mag_change[0],1000,7000)
 
     
         
@@ -185,10 +176,9 @@ def medical():
     mag_change=np.copy(array[0])
     oamp=np.copy(originalamp)
     amp=oamp
-    # ana etbadant ya hassan 
-    #just to put things in place mshh saaa7
+    #
     if (mag_change[0]!=1):
-        amp=musicfft(oamp,originatime[len(originatime)-2],10*mag_change[0],40,246)
+        amp=bandpass_filter(oamp,4800,mag_change[0],20,150)
     #
     modified_signal=amp.tolist()
     global amplitudelist
