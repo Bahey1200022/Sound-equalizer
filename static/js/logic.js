@@ -204,16 +204,16 @@ inputElement.addEventListener('change', (event) => {
         sendsig();
         img.setAttribute("src",'/spectogram?' +  new Date().getTime());
         //audioElement.setAttribute("src", "/generate_audio?" + new Date().getTime());
-         trace1={
-          x: timeArray,
-          y: amplitudeArray,name:"original",
-          type: 'scatter',
-          mode: 'lines',
-          line: {
-              color: 'blue'
-          },
-        };
-        Plotly.newPlot(plotDiv, [trace1], layout, config);
+        //  trace1={
+        //   x: timeArray,
+        //   y: amplitudeArray,name:"original",
+        //   type: 'scatter',
+        //   mode: 'lines',
+        //   line: {
+        //       color: 'blue'
+        //   },
+        // };
+        // Plotly.newPlot(plotDiv, [trace1], layout, config);
 
         
       })
@@ -257,16 +257,16 @@ else{
 equalize();}
 img2.setAttribute("src",'/specto2?' +  new Date().getTime());
 //img2.src = '/specto2';
- trace2={
-  x: timeArray,
-  y: modifiedamplitude,name:"original",
-  type: 'scatter',
-  mode: 'lines',
-  line: {
-      color: 'blue'
-  },
-};
-Plotly.newPlot(plotDiv2, [trace2], layout, config);
+//  trace2={
+//   x: timeArray,
+//   y: modifiedamplitude,name:"original",
+//   type: 'scatter',
+//   mode: 'lines',
+//   line: {
+//       color: 'blue'
+//   },
+// };
+// Plotly.newPlot(plotDiv2, [trace2], layout, config);
 generateAudio();
 }
 
@@ -462,7 +462,7 @@ function equalize_med(callback){
             }
         })
 
-////////
+//////
 
 const playBtn = document.getElementById('playBtn');
 const pauseBtn = document.getElementById('pauseBtn');
@@ -517,7 +517,7 @@ pauseBtn.addEventListener('click', function() {
 
 speedSlider.addEventListener('input', function() {
   cinespeed = speedSlider.max - this.value;  //slider max value - new value to reverse
-  if(playAnim) {
+  if(playAnim) {  
       clearInterval(interval);
       interval = setInterval(() => {
         trace1.x.push(timeArray[i]);
