@@ -177,8 +177,10 @@ def medical():
     oamp=np.copy(originalamp)
     amp=oamp
     #
-    if (mag_change[0]!=1):
-        amp=bandpass_filter(oamp,4800,mag_change[0],20,150)
+    if (mag_change[0]!=1 and mag_change[0]!=0 ):
+        amp=bandpass_filter(oamp,4800,mag_change[0],20,80)
+    elif (mag_change[0]==0):
+        amp=musicfft(oamp,originatime[len(originatime)-2],1,81,150)    
     #
     modified_signal=amp.tolist()
     global amplitudelist
