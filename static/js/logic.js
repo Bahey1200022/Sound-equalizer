@@ -94,6 +94,9 @@ var trace1 = { x: [], y: [], mode: 'lines', line: { color: 'blue' }, visible: tr
 var trace2 = { x: [], y: [], mode: 'lines', line: { color: 'blue' }, visible: true };
 const layout = { title: 'Original Signal', yaxis: { title: 'Amplitude', fixedrange: true }, xaxis: { title: 'Time', fixedrange: true, rangemode: 'tozero'}, width : 700 }; // fixedrange -> No pan when there is no signal
 const plotDiv = document.getElementById('graph1');
+const original_plot = document.getElementById('full_graph1');
+const modified_plot = document.getElementById('full_graph2');
+
 const config = {
     displayModeBar: true, //disable plotlytool bar when there is no signal
 }
@@ -203,17 +206,17 @@ inputElement.addEventListener('change', (event) => {
          signalfile=true;
         sendsig();
         img.setAttribute("src",'/spectogram?' +  new Date().getTime());
-        //audioElement.setAttribute("src", "/generate_audio?" + new Date().getTime());
-        //  trace1={
-        //   x: timeArray,
-        //   y: amplitudeArray,name:"original",
-        //   type: 'scatter',
-        //   mode: 'lines',
-        //   line: {
-        //       color: 'blue'
-        //   },
-        // };
-        // Plotly.newPlot(plotDiv, [trace1], layout, config);
+
+        const trace_org={
+          x: timeArray,
+          y: amplitudeArray,name:"original",
+          type: 'scatter',
+          mode: 'lines',
+          line: {
+              color: 'blue'
+          },
+        };
+        Plotly.newPlot(original_plot, [trace_org], layout, config);
 
         
       })
@@ -257,16 +260,29 @@ else{
 equalize();}
 img2.setAttribute("src",'/specto2?' +  new Date().getTime());
 //img2.src = '/specto2';
-//  trace2={
+ trace_mod={
+  x: timeArray,
+  y: modifiedamplitude,name:"Modified",
+  type: 'scatter',
+  mode: 'lines',
+  line: {
+      color: 'blue'
+  },
+};
+
+Plotly.newPlot(modified_plot, [trace_mod], layout2, config);
+
+// const trace={
 //   x: timeArray,
-//   y: modifiedamplitude,name:"original",
+//   y: amplitudeArray,name:"original",
 //   type: 'scatter',
 //   mode: 'lines',
 //   line: {
 //       color: 'blue'
 //   },
 // };
-// Plotly.newPlot(plotDiv2, [trace2], layout, config);
+// Plotly.newPlot(plotDiv, [trace], layout2, config);
+
 generateAudio();
 }
 
@@ -474,6 +490,8 @@ var i = 0;
 var interval;
 
 
+
+
 function draw_sig(interval, trace_1, trace_2, plot1, plot2, i, speed, amplitude, modified, time){
   interval = setInterval(() => {
     trace_1.x.push(time[i]);
@@ -595,7 +613,6 @@ stopbtn.addEventListener('click', function() {
       };
       Plotly.newPlot(plotDiv2, [trace2], layout, config);
   }
-
 
 })
 
