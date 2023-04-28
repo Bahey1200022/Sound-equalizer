@@ -117,8 +117,9 @@ var sliders = document.querySelectorAll('.slider');
 //Change frequency when slider value changes
 // Create an array to store the frequency values
 freq_1=[1,1,1,1,1,1,1,1,1,1];
-freq_ranges=[85,102,146,190,234,278,322,366,410,454]
-
+// freq_ranges=[85,102,146,190,234,278,322,366,410,454]
+let maxf;var range;
+freq_ranges=[];
 // Loop through each slider
 sliders.forEach(function(slider, index) {
   // Add an event listener to listen for changes in the slider value
@@ -169,7 +170,7 @@ inputElement.addEventListener('change', (event) => {
       img.setAttribute('src', '');
       img2.setAttribute('src', '');
       audioElement.src = '';
-
+     freq_ranges=[];
       signalfile=false;
 
     }
@@ -205,7 +206,14 @@ inputElement.addEventListener('change', (event) => {
 
          signalfile=true;
         sendsig();
+        range = maxf/10;let sum=0;
+        for(let i=0;i<10;i++){
+          sum=sum+range
+          freq_ranges.push(sum);
+        }
+        console.log('ranges:',freq_ranges);
         img.setAttribute("src",'/spectogram?' +  new Date().getTime());
+        document.getElementById("graph1").style.display = "none";
 
         const trace_org={
           x: timeArray,
@@ -271,6 +279,7 @@ img2.setAttribute("src",'/specto2?' +  new Date().getTime());
 };
 
 Plotly.newPlot(modified_plot, [trace_mod], layout2, config);
+document.getElementById("graph2").style.display = "none";
 
 // const trace={
 //   x: timeArray,
@@ -320,7 +329,7 @@ function sendsig(callback){
     dataType: "json",
     success: function(data) {
       console.log('signal max frequency:',data.sig);
-      
+      maxf=data.sig;
       if (typeof callback === "function") {
         callback();
       }
@@ -365,7 +374,7 @@ function equalizemusic(callback){
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function equalize(callback){
-  let array = [timeArray, amplitudeArray,freq_1,freq_ranges];
+  let array = [timeArray, amplitudeArray,freq_1,freq_ranges,[range]];
   $.ajax({
     type: "POST",
     url: "/calculate-equalized_sig",
@@ -519,12 +528,18 @@ function draw_sig(interval, trace_1, trace_2, plot1, plot2, i, speed, amplitude,
 
 playBtn.addEventListener('click', function() {
   // Plotly.deleteTraces(plotDiv, 1);Plotly.deleteTraces(plotDiv2, 0);
+
   if(!playAnim)
   {
     // Plotly.deleteTraces(plotDiv, 0);
     // Plotly.deleteTraces(plotDiv2, 0);
       playAnim = true;
+     
       // draw_sig(interval, trace1, trace2, plotDiv, plotDiv2, i, cinespeed, amplitudeArray, modifiedamplitude, timeArray);
+  document.getElementById("full_graph2").style.display = "none";
+  document.getElementById("full_graph1").style.display = "none";
+  document.getElementById("graph2").style.display = "block";
+  document.getElementById("graph1").style.display = "block";
 
 
       interval = setInterval(() => {
@@ -587,7 +602,10 @@ speedSlider.addEventListener('input', function() {
 });
 
 stopbtn.addEventListener('click', function() {
-
+  document.getElementById("full_graph2").style.display = "block";
+  document.getElementById("full_graph1").style.display = "block";
+  document.getElementById("graph2").style.display = "none";
+  document.getElementById("graph1").style.display = "none";
   if(playAnim)
   {
       playAnim = false;

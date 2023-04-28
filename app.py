@@ -39,10 +39,10 @@ def musicfft(amplist,time,equalizedmag,f1,f2):
     return modified_sig
     
 
-def equalize_freq(amplist,time,f,equalizedmag):
+def equalize_freq(amplist,time,f,equalizedmag,r):
         fft_amp = np.fft.fft(amplist) # FFT of signal
         freqs = np.fft.fftfreq(len(amplist), d=time/len(amplist)) # Frequency array
-        freq_mask = (freqs >= f-44) & (freqs <= f)
+        freq_mask = (freqs >= f-r) & (freqs <= f)
         #freqs_picked = freqs[freq_mask]
         new_mag = fft_amp[freq_mask] * float(equalizedmag)
         fft_amp[freq_mask] = new_mag
@@ -120,9 +120,10 @@ def calculate_equalized():
     freqadjusted=np.copy(array[3])
     amp=np.copy(array[1])
     sigtime=array[0][len(array[0])-2]
+    rangef=array[4][0]
     
     for i in range(len(freqadjusted)):
-        amp=equalize_freq(amp,sigtime,freqadjusted[i],mag_change[i])
+        amp=equalize_freq(amp,sigtime,freqadjusted[i],mag_change[i],rangef)
         
     modified_signal=amp.tolist()
     global amplitudelist
