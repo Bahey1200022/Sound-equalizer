@@ -473,6 +473,32 @@ var playAnim = false;
 var i = 0;
 var interval;
 
+
+function draw_sig(interval, trace_1, trace_2, plot1, plot2, i, speed, amplitude, modified, time){
+  interval = setInterval(() => {
+    trace_1.x.push(time[i]);
+    trace_1.y.push(amplitude[i]);
+    trace_2.x.push(time[i]);
+    trace_2.y.push(modified[i]);
+
+    Plotly.redraw(plot1);
+    Plotly.redraw(plot2);
+
+    i++;
+
+    //if animation has ended reset i to 0 to start it again
+    if (i >= time.length) {
+        clearInterval(interval);
+      }
+    
+    Plotly.relayout(plot1, { xaxis: { range: [time[Math.max(0, i - 100)], time[i]] }});
+    Plotly.relayout(plot2, { xaxis: { range: [time[Math.max(0, i - 100)], time[i]] }});
+
+  }, speed-50);
+
+}
+
+
 playBtn.addEventListener('click', function() {
   // Plotly.deleteTraces(plotDiv, 1);Plotly.deleteTraces(plotDiv2, 0);
   if(!playAnim)
@@ -480,6 +506,9 @@ playBtn.addEventListener('click', function() {
     // Plotly.deleteTraces(plotDiv, 0);
     // Plotly.deleteTraces(plotDiv2, 0);
       playAnim = true;
+      // draw_sig(interval, trace1, trace2, plotDiv, plotDiv2, i, cinespeed, amplitudeArray, modifiedamplitude, timeArray);
+
+
       interval = setInterval(() => {
       trace1.x.push(timeArray[i]);
       trace1.y.push(amplitudeArray[i]);
@@ -529,7 +558,7 @@ speedSlider.addEventListener('input', function() {
         Plotly.redraw(plotDiv2);
           i++;
           
-          if (i >= Time.length) {
+          if (i >= timeArray.length) {
           clearInterval(interval);
       }
 
